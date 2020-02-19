@@ -1,0 +1,8 @@
+{
+  "host": "localhost",
+  "port": "27017",
+  "user": "dieteam",
+  "password": "dieteam*",
+  "database": "smart-healthcare",
+  "pwdSecret": "SeCrEtKeYfOrHaShInG"
+}

@@ -1,0 +1,20 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="bin\www" type="NodeJSConfigurationType" path-to-js-file="bin/www" working-dir="$PROJECT_DIR$/../smart-healthcare-backend">
+    <envs>
+      <env name="DEBUG" value="smart-healthcare-backend:*" />
+    </envs>
+    <EXTENSION ID="com.jetbrains.nodejs.run.NodeJSStartBrowserRunConfigurationExtension">
+      <browser url="http://localhost:3000/" />
+    </EXTENSION>
+    <method v="2">
+      <option name="GulpBeforeRunTask" enabled="true">
+        <node-interpreter>project</node-interpreter>
+        <node-options />
+        <gulpfile>$PROJECT_DIR$/../smart-healthcare-backend/gulpfile.babel.js</gulpfile>
+        <tasks />
+        <arguments />
+        <envs />
+      </option>
+    </method>
+  </configuration>
+</component>
