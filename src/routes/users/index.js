@@ -2,6 +2,7 @@ import express from "express";
 import {controller} from "./users.controller";
 import healthData from "./health-data";
 import meals from "./meals";
+import fitness from "./fitness";
 
 const router = express.Router();
 
@@ -11,5 +12,6 @@ router.post('/:username/change-password', controller.changePassword);
 
 router.use('/:username/health-data', healthData);
 router.use('/:username/meals', meals);
+router.use('/:username/fitness', fitness);
 
 export default router;
