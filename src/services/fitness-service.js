@@ -16,7 +16,7 @@ class FitnessService {
     }
 
     getFitness(id) {
-        return Fitness.find({_id: mongoose.Types.ObjectId(id)});
+        return Fitness.findOne({_id: mongoose.Types.ObjectId(id)});
     }
 
     createFitness(username, data) {

@@ -16,7 +16,7 @@ class MealService {
     }
 
     getMeal(id) {
-        return Meal.find({_id: mongoose.Types.ObjectId(id)});
+        return Meal.findOne({_id: mongoose.Types.ObjectId(id)});
     }
 
     createMeal(username, data) {
