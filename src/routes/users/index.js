@@ -10,8 +10,8 @@ router.get('/:username', controller.getUser);
 router.delete('/:username', controller.deleteUser);
 router.post('/:username/change-password', controller.changePassword);
 
-router.use('/:username/health-data', healthData);
-router.use('/:username/meals', meals);
-router.use('/:username/fitness', fitness);
+router.use('/', healthData);
+router.use('/', meals);
+router.use('/', fitness);
 
 export default router;

@@ -4,7 +4,7 @@ import {checkPermission} from "../../check-permission";
 
 const router = express.Router();
 
-router.get('/', function (req, res) {
+router.get('/:username/health-data', function (req, res) {
     if (!checkPermission(req, req.params.username)) return res.status(403).json({error: 'no permission'});
 
     healthDataService.getHealthData(req.params.username)
@@ -16,7 +16,7 @@ router.get('/', function (req, res) {
         .catch(err => res.status(500).json({error: err}));
 });
 
-router.post('/', function (req, res) {
+router.post('/:username/health-data', function (req, res) {
     if (!checkPermission(req, req.params.username)) return res.status(403).json({error: 'no permission'});
 
     healthDataService.createHealthData(req.params.username, req.body)
@@ -26,7 +26,7 @@ router.post('/', function (req, res) {
         .catch(err => res.status(500).json({error: err}));
 });
 
-router.put('/', function (req, res) {
+router.put('/:username/health-data', function (req, res) {
     if (!checkPermission(req, req.params.username)) return res.status(403).json({error: 'no permission'});
 
     healthDataService.updateHealthData(req.params.username, req.body)
@@ -37,7 +37,7 @@ router.put('/', function (req, res) {
         .catch(err => res.status(500).json({error: err}));
 });
 
-router.delete('/', function (req, res) {
+router.delete('/:username/health-data', function (req, res) {
     if (!checkPermission(req, req.params.username)) return res.status(403).json({error: 'no permission'});
 
     healthDataService.getHealthData(req.params.username)

@@ -7,7 +7,7 @@ import appConfig from "../../config/app-config";
 
 const router = express.Router();
 
-router.get('/', function (req, res) {
+router.get('/:username/meals', function (req, res) {
     if (!checkPermission(req, req.params.username)) return res.status(403).json({error: 'no permission'});
 
     mealService.getMeals(req.params.username, req.query.date)
@@ -17,7 +17,7 @@ router.get('/', function (req, res) {
         .catch(err => res.status(500).json({error: err}));
 });
 
-router.get('/:id', function (req, res) {
+router.get('/:username/meals/:id', function (req, res) {
     if (!checkPermission(req, req.params.username)) return res.status(403).json({error: 'no permission'});
 
     mealService.getMeal(req.params.id)
@@ -29,7 +29,7 @@ router.get('/:id', function (req, res) {
         .catch(err => res.status(500).json({error: err}));
 });
 
-router.post('/', function (req, res) {
+router.post('/:username/meals', function (req, res) {
     if (!checkPermission(req, req.params.username)) return res.status(403).json({error: 'no permission'});
 
     if (!req.body.date) req.body.date = moment().tz(appConfig.timezone);
@@ -41,7 +41,7 @@ router.post('/', function (req, res) {
         .catch(err => res.status(500).json({error: err}));
 });
 
-router.put('/:id', function (req, res) {
+router.put('/:username/meals/:id', function (req, res) {
     if (!checkPermission(req, req.params.username)) return res.status(403).json({error: 'no permission'});
 
     mealService.updateMeal(req.params.id, req.body)
@@ -52,7 +52,7 @@ router.put('/:id', function (req, res) {
         .catch(err => res.status(500).json({error: err}));
 });
 
-router.delete('/:id', function (req, res) {
+router.delete('/:username/meals/:id', function (req, res) {
     if (!checkPermission(req, req.params.username)) return res.status(403).json({error: 'no permission'});
 
     mealService.getMeal(req.params.id)
