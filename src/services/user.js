@@ -9,13 +9,6 @@ let encryptPassword = function (password) {
 };
 
 class UserService {
-    createUser(username, password) {
-        return User.create({
-            username,
-            password: encryptPassword(password)
-        });
-    }
-
     getUser(username) {
         return User.findByUsername(username);
     }
