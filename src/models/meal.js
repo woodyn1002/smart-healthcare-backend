@@ -13,4 +13,4 @@ const Meal = new Schema({
     }]
 });
 
-export default mongoose.model('meal', Meal);
+export default mongoose.model('Meal', Meal, 'meals');

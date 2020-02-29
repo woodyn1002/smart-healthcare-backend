@@ -7,4 +7,4 @@ const Food = new Schema({
     calories: {type: Number, required: true}
 });
 
-export default mongoose.model('food', Food);
+export default mongoose.model('Food', Food, 'foods');

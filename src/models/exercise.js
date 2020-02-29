@@ -7,4 +7,4 @@ const Exercise = new Schema({
     met: {type: String, required: true}
 });
 
-export default mongoose.model('exercise', Exercise);
+export default mongoose.model('Exercise', Exercise, 'exercises');

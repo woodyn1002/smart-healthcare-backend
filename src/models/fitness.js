@@ -11,4 +11,4 @@ const Fitness = new Schema({
     elapsedTime: {type: Number, required: true}
 });
 
-export default mongoose.model('fitness', Fitness);
+export default mongoose.model('Fitness', Fitness, 'fitness');

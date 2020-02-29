@@ -19,4 +19,4 @@ const HealthData = new Schema({
     fastingBloodSugar: Number
 });
 
-export default mongoose.model('health-data', HealthData);
+export default mongoose.model('HealthData', HealthData, 'healthdata');
