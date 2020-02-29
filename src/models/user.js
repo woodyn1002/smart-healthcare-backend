@@ -8,4 +8,8 @@ const User = new Schema({
     isAdmin: {type: Boolean, default: false}
 });
 
+User.statics.findByUsername = function (username) {
+    return this.find({username});
+};
+
 export default mongoose.model('User', User, 'users');

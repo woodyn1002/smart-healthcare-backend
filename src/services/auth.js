@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import jwtConfig from "../config/jwt-config";
-import {userService} from "./user";
+import User from "../models/user";
 
 class AuthService {
     verify(token) {
@@ -17,11 +17,11 @@ class AuthService {
             if (user) {
                 throw new Error('username exists');
             } else {
-                return userService.createUser(username, password);
+                return User.create({username, password});
             }
         };
 
-        return userService.getUser(username)
+        return User.findByUsername(username)
             .then(create);
     }
 
@@ -53,7 +53,7 @@ class AuthService {
             }
         };
 
-        return userService.getUser(username)
+        return User.findByUsername(username)
             .then(check);
     }
 }

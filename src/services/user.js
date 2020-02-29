@@ -19,11 +19,11 @@ class UserService {
     }
 
     getUser(username) {
-        return User.findOne({username});
+        return User.findByUsername(username);
     }
 
     changePassword(username, newPassword) {
-        return User.findOne({username})
+        return User.findByUsername(username)
             .then(user => {
                 if (!user) return;
                 user.password = encryptPassword(newPassword);
