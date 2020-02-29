@@ -8,7 +8,7 @@ const Meal = new Schema({
     location: String,
     satisfactionScore: {type: Number, min: 0, max: 4},
     dishes: [{
-        foodId: {type: mongoose.Types.ObjectId, required: true},
+        foodName: {type: String, required: true},
         amount: {type: Number, default: 1}
     }]
 });

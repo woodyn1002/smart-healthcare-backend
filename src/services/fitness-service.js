@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import Fitness from "../models/fitness";
 import moment from "moment";
 
@@ -15,15 +14,15 @@ class FitnessService {
         return Fitness.find(conditions);
     }
 
-    getFitness(id) {
-        return Fitness.findOne({_id: mongoose.Types.ObjectId(id)});
+    getFitness(username, date) {
+        return Fitness.findOne({username, date});
     }
 
-    createFitness(username, data) {
+    createFitness(username, date, data) {
         const fitness = new Fitness({
             username,
-            exerciseId: mongoose.Types.ObjectId(data.exerciseId),
-            date: data.date,
+            date,
+            exerciseName: data.exerciseName,
             burntCalories: data.burntCalories,
             count: data.count,
             elapsedTime: data.elapsedTime
@@ -32,13 +31,12 @@ class FitnessService {
         return fitness.save();
     }
 
-    updateFitness(id, data) {
-        return Fitness.findOne({_id: mongoose.Types.ObjectId(id)})
+    updateFitness(username, date, data) {
+        return Fitness.findOne({username, date})
             .then(fitness => {
                 if (!fitness) return;
 
-                if (data.exerciseId) fitness.exerciseId = data.exerciseId;
-                if (data.date) fitness.date = data.date;
+                if (data.exerciseName) fitness.exerciseName = data.exerciseName;
                 if (data.burntCalories) fitness.burntCalories = data.burntCalories;
                 if (data.count) fitness.count = data.count;
                 if (data.elapsedTime) fitness.elapsedTime = data.elapsedTime;
@@ -47,8 +45,8 @@ class FitnessService {
             });
     }
 
-    deleteFitness(id) {
-        return Fitness.deleteOne({_id: mongoose.Types.ObjectId(id)});
+    deleteFitness(username, date) {
+        return Fitness.deleteOne({username, date});
     }
 }
 

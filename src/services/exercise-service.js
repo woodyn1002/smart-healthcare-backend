@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import Exercise from "../models/exercise";
 
 class ExerciseService {
@@ -6,8 +5,8 @@ class ExerciseService {
         return Exercise.find();
     }
 
-    getExercise(id) {
-        return Exercise.findOne({_id: mongoose.Types.ObjectId(id)});
+    getExercise(name) {
+        return Exercise.findOne({name});
     }
 
     createExercise(name, met) {
@@ -19,18 +18,17 @@ class ExerciseService {
         return exercise.save();
     }
 
-    updateExercise(id, name, met) {
-        return Exercise.findOne({_id: mongoose.Types.ObjectId(id)})
+    updateExercise(name, met) {
+        return Exercise.findOne({name})
             .then(exercise => {
                 if (!exercise) return;
-                if (name) exercise.name = name;
                 if (met) exercise.met = met;
                 return exercise.save();
             });
     }
 
-    deleteExercise(id) {
-        return Exercise.deleteOne({_id: mongoose.Types.ObjectId(id)});
+    deleteExercise(name) {
+        return Exercise.deleteOne({name});
     }
 }
 

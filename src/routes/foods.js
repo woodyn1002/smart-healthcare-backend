@@ -12,8 +12,8 @@ router.get('/', function (req, res) {
         .catch(err => res.status(500).json({error: err}));
 });
 
-router.get('/:id', function (req, res) {
-    foodService.getFood(req.params.id)
+router.get('/:name', function (req, res) {
+    foodService.getFood(req.params.name)
         .then(food => {
             if (!food) return res.status(404).json({error: 'food not found'});
 
@@ -32,10 +32,10 @@ router.post('/', function (req, res) {
         .catch(err => res.status(500).json({error: err}));
 });
 
-router.put('/:id', function (req, res) {
+router.put('/:name', function (req, res) {
     if (!checkPermission(req)) return res.status(403).json({error: 'no permission'});
 
-    foodService.updateFood(req.params.id, req.body.name, req.body.calories)
+    foodService.updateFood(req.params.name, req.body.calories)
         .then(food => {
             if (!food) return res.status(404).json({error: 'food not found'});
             res.json(food);
@@ -43,13 +43,13 @@ router.put('/:id', function (req, res) {
         .catch(err => res.status(500).json({error: err}));
 });
 
-router.delete('/:id', function (req, res) {
+router.delete('/:name', function (req, res) {
     if (!checkPermission(req)) return res.status(403).json({error: 'no permission'});
 
-    foodService.getFood(req.params.id)
+    foodService.getFood(req.params.name)
         .then(food => {
             if (!food) return res.status(404).json({error: 'food not found'});
-            return foodService.deleteFood(req.params.id);
+            return foodService.deleteFood(req.params.name);
         })
         .then(() => res.status(204).end())
         .catch(err => res.status(500).json({error: err}));

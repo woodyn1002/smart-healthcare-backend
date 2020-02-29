@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import Food from "../models/food";
 
 class FoodService {
@@ -6,8 +5,8 @@ class FoodService {
         return Food.find();
     }
 
-    getFood(id) {
-        return Food.findOne({_id: mongoose.Types.ObjectId(id)});
+    getFood(name) {
+        return Food.findOne({name});
     }
 
     createFood(name, calories) {
@@ -19,18 +18,17 @@ class FoodService {
         return food.save();
     }
 
-    updateFood(id, name, calories) {
-        return Food.findOne({_id: mongoose.Types.ObjectId(id)})
+    updateFood(name, calories) {
+        return Food.findOne({name})
             .then(food => {
                 if (!food) return;
-                if (name) food.name = name;
                 if (calories) food.calories = calories;
                 return food.save();
             });
     }
 
-    deleteFood(id) {
-        return Food.deleteOne({_id: mongoose.Types.ObjectId(id)});
+    deleteFood(name) {
+        return Food.deleteOne({name});
     }
 }
 

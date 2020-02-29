@@ -12,8 +12,8 @@ router.get('/', function (req, res) {
         .catch(err => res.status(500).json({error: err}));
 });
 
-router.get('/:id', function (req, res) {
-    exerciseService.getExercise(req.params.id)
+router.get('/:name', function (req, res) {
+    exerciseService.getExercise(req.params.name)
         .then(exercise => {
             if (!exercise) return res.status(404).json({error: 'exercise not found'});
 
@@ -32,10 +32,10 @@ router.post('/', function (req, res) {
         .catch(err => res.status(500).json({error: err}));
 });
 
-router.put('/:id', function (req, res) {
+router.put('/:name', function (req, res) {
     if (!checkPermission(req)) return res.status(403).json({error: 'no permission'});
 
-    exerciseService.updateExercise(req.params.id, req.body.name, req.body.met)
+    exerciseService.updateExercise(req.params.name, req.body.met)
         .then(exercise => {
             if (!exercise) return res.status(404).json({error: 'exercise not found'});
             res.json(exercise);
@@ -43,13 +43,13 @@ router.put('/:id', function (req, res) {
         .catch(err => res.status(500).json({error: err}));
 });
 
-router.delete('/:id', function (req, res) {
+router.delete('/:name', function (req, res) {
     if (!checkPermission(req)) return res.status(403).json({error: 'no permission'});
 
-    exerciseService.getExercise(req.params.id)
+    exerciseService.getExercise(req.params.name)
         .then(exercise => {
             if (!exercise) return res.status(404).json({error: 'exercise not found'});
-            return exerciseService.deleteExercise(req.params.id);
+            return exerciseService.deleteExercise(req.params.name);
         })
         .then(() => res.status(204).end())
         .catch(err => res.status(500).json({error: err}));
