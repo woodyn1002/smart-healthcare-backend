@@ -1,5 +1,4 @@
 import express from "express";
-import "moment-timezone";
 import validators from "../../middlewares/validators";
 import {fitnessService} from "../../services/fitness";
 
