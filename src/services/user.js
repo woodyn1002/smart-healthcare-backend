@@ -8,8 +8,8 @@ const encryptPassword = function (password) {
         .digest('base64');
 };
 
-export function createUser(username, password) {
-    return User.create({username, password});
+export function createUser(username, password, email, isAdmin) {
+    return User.create({username, password, email, isAdmin});
 }
 
 export function getUser(username) {
