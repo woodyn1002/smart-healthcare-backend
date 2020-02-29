@@ -19,15 +19,13 @@ class MealService {
     }
 
     createMeal(username, date, data) {
-        const meal = new Meal({
+        return Meal.create({
             username,
             date,
             location: data.location,
             satisfactionScore: data.satisfactionScore,
             foods: data.foods
         });
-
-        return meal.save();
     }
 
     updateMeal(username, date, data) {

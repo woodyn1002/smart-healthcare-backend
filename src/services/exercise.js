@@ -10,12 +10,7 @@ class ExerciseService {
     }
 
     createExercise(name, met) {
-        const exercise = new Exercise({
-            name,
-            met
-        });
-
-        return exercise.save();
+        return Exercise.create({name, met});
     }
 
     updateExercise(name, met) {

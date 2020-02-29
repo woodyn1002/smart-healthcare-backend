@@ -6,7 +6,7 @@ class HealthDataService {
     }
 
     createHealthData(username, data) {
-        const healthData = new HealthData({
+        return HealthData.create({
             username,
             sex: data.sex,
             height: data.height,
@@ -19,8 +19,6 @@ class HealthDataService {
             hdlCholesterol: data.hdlCholesterol,
             fastingBloodSugar: data.fastingBloodSugar
         });
-
-        return healthData.save();
     }
 
     updateHealthData(username, data) {

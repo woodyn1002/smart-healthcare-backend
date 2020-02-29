@@ -10,12 +10,10 @@ let encryptPassword = function (password) {
 
 class UserService {
     createUser(username, password) {
-        const user = new User({
+        return User.create({
             username,
             password: encryptPassword(password)
         });
-
-        return user.save();
     }
 
     getUser(username) {

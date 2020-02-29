@@ -19,7 +19,7 @@ class FitnessService {
     }
 
     createFitness(username, date, data) {
-        const fitness = new Fitness({
+        return Fitness.create({
             username,
             date,
             exerciseName: data.exerciseName,
@@ -27,8 +27,6 @@ class FitnessService {
             count: data.count,
             elapsedTime: data.elapsedTime
         });
-
-        return fitness.save();
     }
 
     updateFitness(username, date, data) {

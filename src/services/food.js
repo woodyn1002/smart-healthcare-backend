@@ -10,12 +10,7 @@ class FoodService {
     }
 
     createFood(name, calories) {
-        const food = new Food({
-            name,
-            calories
-        });
-
-        return food.save();
+        return Food.create({name, calories});
     }
 
     updateFood(name, calories) {
