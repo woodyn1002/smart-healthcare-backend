@@ -11,12 +11,12 @@ export function verify(token) {
     });
 }
 
-export function register(username, password) {
+export function register(username, password, email, isAdmin) {
     const create = (user) => {
         if (user) {
             throw new Error('username exists');
         } else {
-            return UserService.createUser(username, password);
+            return UserService.createUser(username, password, email, isAdmin);
         }
     };
 

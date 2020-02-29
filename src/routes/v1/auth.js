@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post('/register',
     (req, res) => {
-        const {username, password} = req.body;
+        const {username, password, email} = req.body;
 
         const respond = (user) => {
             res.json(user);
@@ -17,7 +17,7 @@ router.post('/register',
             });
         };
 
-        AuthService.register(username, password)
+        AuthService.register(username, password, email)
             .then(respond)
             .catch(onError);
     });
