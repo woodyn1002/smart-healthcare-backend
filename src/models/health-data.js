@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const HealthData = new Schema({
+const healthDataSchema = new Schema({
     username: {type: String, index: true, unique: true, required: true},
     sex: {type: String, enum: ['male', 'female']},
     height: Number,
@@ -19,4 +19,4 @@ const HealthData = new Schema({
     fastingBloodSugar: Number
 });
 
-export default mongoose.model('HealthData', HealthData, 'healthdata');
+export default mongoose.model('HealthData', healthDataSchema, 'healthdata');

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const Meal = new Schema({
+const mealSchema = new Schema({
     username: {type: String, index: true, unique: true, required: true},
     date: {type: Date, index: true, required: true},
     location: String,
@@ -13,4 +13,4 @@ const Meal = new Schema({
     }]
 });
 
-export default mongoose.model('Meal', Meal, 'meals');
+export default mongoose.model('Meal', mealSchema, 'meals');

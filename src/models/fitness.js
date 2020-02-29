@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const Fitness = new Schema({
+const fitnessSchema = new Schema({
     username: {type: String, index: true, unique: true, required: true},
     date: {type: Date, index: true, required: true},
     exerciseName: {type: String, required: true},
@@ -11,4 +11,4 @@ const Fitness = new Schema({
     elapsedTime: {type: Number, required: true}
 });
 
-export default mongoose.model('Fitness', Fitness, 'fitness');
+export default mongoose.model('Fitness', fitnessSchema, 'fitness');
