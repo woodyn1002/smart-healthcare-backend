@@ -9,6 +9,6 @@ db.once('open', function () {
 
 mongoose.connect(
     'mongodb://' + config.user + ':' + config.user + '@' + config.host + ':' + config.port + '/' + config.database,
-    {useUnifiedTopology: true, useNewUrlParser: true});
+    {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true});
 
 export default db;

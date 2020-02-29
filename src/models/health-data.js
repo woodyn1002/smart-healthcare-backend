@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const HealthData = new Schema({
-    username: String,
-    sex: String,
+    username: {type: String, index: true, unique: true, required: true},
+    sex: {type: String, enum: ['male', 'female']},
     height: Number,
     weight: Number,
     birthdate: {

@@ -3,11 +3,14 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const Meal = new Schema({
-    username: String,
-    date: Date,
+    username: {type: String, index: true, unique: true, required: true},
+    date: {type: Date, index: true, required: true},
     location: String,
-    satisfactionScore: Number,
-    foods: Array
+    satisfactionScore: {type: Number, min: 0, max: 4},
+    dishes: [{
+        foodId: {type: mongoose.Types.ObjectId, required: true},
+        amount: {type: Number, default: 1}
+    }]
 });
 
 export default mongoose.model('meal', Meal);
