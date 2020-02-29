@@ -1,6 +1,6 @@
 import express from "express";
 import {exerciseService} from "../services/exercise";
-import {checkPermission} from "../check-permission";
+import validators from "../middlewares/validators";
 
 const router = express.Router();
 
@@ -22,37 +22,37 @@ router.get('/:name', function (req, res) {
         .catch(err => res.status(500).json({error: err}));
 });
 
-router.post('/', function (req, res) {
-    if (!checkPermission(req)) return res.status(403).json({error: 'no permission'});
+router.post('/',
+    validators.loggedIn, validators.isAdmin,
+    function (req, res) {
+        exerciseService.createExercise(req.body.name, req.body.met)
+            .then(exercise => {
+                res.json(exercise);
+            })
+            .catch(err => res.status(500).json({error: err}));
+    });
 
-    exerciseService.createExercise(req.body.name, req.body.met)
-        .then(exercise => {
-            res.json(exercise);
-        })
-        .catch(err => res.status(500).json({error: err}));
-});
+router.put('/:name',
+    validators.loggedIn, validators.isAdmin,
+    function (req, res) {
+        exerciseService.updateExercise(req.params.name, req.body.met)
+            .then(exercise => {
+                if (!exercise) return res.status(404).json({error: 'exercise not found'});
+                res.json(exercise);
+            })
+            .catch(err => res.status(500).json({error: err}));
+    });
 
-router.put('/:name', function (req, res) {
-    if (!checkPermission(req)) return res.status(403).json({error: 'no permission'});
-
-    exerciseService.updateExercise(req.params.name, req.body.met)
-        .then(exercise => {
-            if (!exercise) return res.status(404).json({error: 'exercise not found'});
-            res.json(exercise);
-        })
-        .catch(err => res.status(500).json({error: err}));
-});
-
-router.delete('/:name', function (req, res) {
-    if (!checkPermission(req)) return res.status(403).json({error: 'no permission'});
-
-    exerciseService.getExercise(req.params.name)
-        .then(exercise => {
-            if (!exercise) return res.status(404).json({error: 'exercise not found'});
-            return exerciseService.deleteExercise(req.params.name);
-        })
-        .then(() => res.status(204).end())
-        .catch(err => res.status(500).json({error: err}));
-});
+router.delete('/:name',
+    validators.loggedIn, validators.isAdmin,
+    function (req, res) {
+        exerciseService.getExercise(req.params.name)
+            .then(exercise => {
+                if (!exercise) return res.status(404).json({error: 'exercise not found'});
+                return exerciseService.deleteExercise(req.params.name);
+            })
+            .then(() => res.status(204).end())
+            .catch(err => res.status(500).json({error: err}));
+    });
 
 export default router;
