@@ -1,6 +1,6 @@
 import express from "express";
 import "moment-timezone";
-import {mealService} from "../../services/meal-service";
+import {mealService} from "../../services/meal";
 import {checkPermission} from "../../check-permission";
 
 const router = express.Router();

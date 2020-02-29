@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import jwtConfig from "../config/jwt-config";
-import {userService} from "../services/user-service";
+import {userService} from "./user";
 
 class AuthService {
     verify(token) {

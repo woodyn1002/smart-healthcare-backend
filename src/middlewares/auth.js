@@ -1,4 +1,4 @@
-import {authService} from "../services/auth-service";
+import {authService} from "../services/auth";
 
 const authMiddleware = (req, res, next) => {
     const token = req.headers['x-access-token'] || req.query.token;

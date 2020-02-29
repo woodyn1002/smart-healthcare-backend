@@ -1,5 +1,5 @@
 import express from "express";
-import {exerciseService} from "../services/exercise-service";
+import {exerciseService} from "../services/exercise";
 import {checkPermission} from "../check-permission";
 
 const router = express.Router();

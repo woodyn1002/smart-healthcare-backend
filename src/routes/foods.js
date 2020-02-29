@@ -1,5 +1,5 @@
 import express from "express";
-import {foodService} from "../services/food-service";
+import {foodService} from "../services/food";
 import {checkPermission} from "../check-permission";
 
 const router = express.Router();

@@ -1,5 +1,5 @@
 import express from "express";
-import {healthDataService} from "../../services/health-data-service";
+import {healthDataService} from "../../services/health-data";
 import {checkPermission} from "../../check-permission";
 
 const router = express.Router();

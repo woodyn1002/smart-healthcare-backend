@@ -1,4 +1,4 @@
-import {userService} from "../../services/user-service";
+import {userService} from "../../services/user";
 import {checkPermission} from "../../check-permission";
 
 class UserController {
