@@ -33,7 +33,6 @@ export function login(username, password) {
                 return new Promise((resolve, reject) => {
                     jwt.sign(
                         {
-                            _id: user._id,
                             username: username,
                             isAdmin: user.isAdmin
                         },
