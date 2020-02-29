@@ -1,6 +1,6 @@
 import express from "express";
-import validators from "../../middlewares/validators";
-import * as FitnessService from "../../services/fitness";
+import validators from "../../../middlewares/validators";
+import * as FitnessService from "../../../services/fitness";
 
 const router = express.Router();
 

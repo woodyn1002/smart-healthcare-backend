@@ -1,14 +1,8 @@
 import express from "express";
-import auth from "./auth";
-import users from "./users";
-import foods from "./foods";
-import exercises from "./exercises";
+import v1 from "./v1";
 
 const router = express.Router();
 
-router.use('/auth', auth);
-router.use('/users', users);
-router.use('/foods', foods);
-router.use('/exercises', exercises);
+router.use('/v1', v1);
 
 export default router;

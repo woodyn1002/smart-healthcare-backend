@@ -1,4 +1,4 @@
-import * as UserService from "../../services/user";
+import * as UserService from "../../../services/user";
 
 export function getUser(req, res) {
     UserService.getUser(req.params.username)

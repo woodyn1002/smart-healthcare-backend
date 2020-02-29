@@ -1,6 +1,6 @@
 import express from "express";
-import * as HealthDataService from "../../services/health-data";
-import validators from "../../middlewares/validators";
+import * as HealthDataService from "../../../services/health-data";
+import validators from "../../../middlewares/validators";
 
 const router = express.Router();
 

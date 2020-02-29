@@ -3,7 +3,7 @@ import * as controllers from "./users.controller";
 import healthData from "./health-data";
 import meals from "./meals";
 import fitness from "./fitness";
-import validators from "../../middlewares/validators";
+import validators from "../../../middlewares/validators";
 
 const router = express.Router();
 
