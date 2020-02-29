@@ -1,5 +1,5 @@
 import express from "express";
-import {controller} from "./users.controller";
+import * as controllers from "./users.controller";
 import healthData from "./health-data";
 import meals from "./meals";
 import fitness from "./fitness";
@@ -9,13 +9,13 @@ const router = express.Router();
 
 router.get('/:username',
     validators.loggedIn, validators.canManageUser,
-    controller.getUser);
+    controllers.getUser);
 router.delete('/:username',
     validators.loggedIn, validators.canManageUser,
-    controller.deleteUser);
+    controllers.deleteUser);
 router.post('/:username/change-password',
     validators.loggedIn, validators.canManageUser,
-    controller.changePassword);
+    controllers.changePassword);
 
 router.use('/', healthData);
 router.use('/', meals);

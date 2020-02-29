@@ -1,4 +1,4 @@
-import {authService} from "../services/auth";
+import * as AuthService from "../services/auth";
 
 const loggedIn = (req, res, next) => {
     const token = req.headers['x-access-token'] || req.query.token;
@@ -15,7 +15,7 @@ const loggedIn = (req, res, next) => {
         })
     };
 
-    authService.verify(token)
+    AuthService.verify(token)
         .then((decoded) => {
             req.token = {decoded};
             next();

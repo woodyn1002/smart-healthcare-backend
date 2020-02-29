@@ -1,30 +1,26 @@
 import Food from "../models/food";
 
-class FoodService {
-    getFoods() {
-        return Food.find();
-    }
-
-    getFood(name) {
-        return Food.findOne({name});
-    }
-
-    createFood(name, calories) {
-        return Food.create({name, calories});
-    }
-
-    updateFood(name, calories) {
-        return Food.findOne({name})
-            .then(food => {
-                if (!food) return;
-                if (calories) food.calories = calories;
-                return food.save();
-            });
-    }
-
-    deleteFood(name) {
-        return Food.deleteOne({name});
-    }
+export function getFoods() {
+    return Food.find();
 }
 
-export let foodService = new FoodService();
+export function getFood(name) {
+    return Food.findOne({name});
+}
+
+export function createFood(name, calories) {
+    return Food.create({name, calories});
+}
+
+export function updateFood(name, calories) {
+    return Food.findOne({name})
+        .then(food => {
+            if (!food) return;
+            if (calories) food.calories = calories;
+            return food.save();
+        });
+}
+
+export function deleteFood(name) {
+    return Food.deleteOne({name});
+}

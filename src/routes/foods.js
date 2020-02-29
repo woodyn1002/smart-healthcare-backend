@@ -1,12 +1,12 @@
 import express from "express";
 import validators from "../middlewares/validators";
-import {foodService} from "../services/food";
+import * as FoodService from "../services/food";
 
 const router = express.Router();
 
 router.get('/',
     (req, res) => {
-        foodService.getFoods()
+        FoodService.getFoods()
             .then(foods => {
                 res.json(foods);
             })
@@ -15,7 +15,7 @@ router.get('/',
 
 router.get('/:name',
     (req, res) => {
-        foodService.getFood(req.params.name)
+        FoodService.getFood(req.params.name)
             .then(food => {
                 if (!food) return res.status(404).json({error: 'food not found'});
 
@@ -27,7 +27,7 @@ router.get('/:name',
 router.post('/',
     validators.loggedIn, validators.isAdmin,
     (req, res) => {
-        foodService.createFood(req.body.name, req.body.calories)
+        FoodService.createFood(req.body.name, req.body.calories)
             .then(food => {
                 res.json(food);
             })
@@ -37,7 +37,7 @@ router.post('/',
 router.put('/:name',
     validators.loggedIn, validators.isAdmin,
     (req, res) => {
-        foodService.updateFood(req.params.name, req.body.calories)
+        FoodService.updateFood(req.params.name, req.body.calories)
             .then(food => {
                 if (!food) return res.status(404).json({error: 'food not found'});
                 res.json(food);
@@ -48,10 +48,10 @@ router.put('/:name',
 router.delete('/:name',
     validators.loggedIn, validators.isAdmin,
     (req, res) => {
-        foodService.getFood(req.params.name)
+        FoodService.getFood(req.params.name)
             .then(food => {
                 if (!food) return res.status(404).json({error: 'food not found'});
-                return foodService.deleteFood(req.params.name);
+                return FoodService.deleteFood(req.params.name);
             })
             .then(() => res.status(204).end())
             .catch(err => res.status(500).json({error: err}));

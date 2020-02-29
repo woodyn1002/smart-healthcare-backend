@@ -1,5 +1,5 @@
 import express from "express";
-import {mealService} from "../../services/meal";
+import * as MealService from "../../services/meal";
 import validators from "../../middlewares/validators";
 
 const router = express.Router();
@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/:username/meals',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        mealService.getMeals(req.params.username, req.query.date)
+        MealService.getMeals(req.params.username, req.query.date)
             .then(meals => {
                 res.json(meals);
             })
@@ -17,7 +17,7 @@ router.get('/:username/meals',
 router.get('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        mealService.getMeal(req.params.username, req.params.date)
+        MealService.getMeal(req.params.username, req.params.date)
             .then(meal => {
                 if (!meal) return res.status(404).json({error: 'meal not found'});
 
@@ -29,7 +29,7 @@ router.get('/:username/meals/:date',
 router.post('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        mealService.createMeal(req.params.username, req.params.date, req.body)
+        MealService.createMeal(req.params.username, req.params.date, req.body)
             .then(meal => {
                 res.json(meal);
             })
@@ -39,7 +39,7 @@ router.post('/:username/meals/:date',
 router.put('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        mealService.updateMeal(req.params.username, req.params.date, req.body)
+        MealService.updateMeal(req.params.username, req.params.date, req.body)
             .then(meal => {
                 if (!meal) return res.status(404).json({error: 'meal not found'});
                 res.json(meal);
@@ -50,10 +50,10 @@ router.put('/:username/meals/:date',
 router.delete('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        mealService.getMeal(req.params.username, req.params.date)
+        MealService.getMeal(req.params.username, req.params.date)
             .then(meal => {
                 if (!meal) return res.status(404).json({error: 'meal not found'});
-                return mealService.deleteMeal(req.params.username, req.params.date);
+                return MealService.deleteMeal(req.params.username, req.params.date);
             })
             .then(() => res.status(204).end())
             .catch(err => res.status(500).json({error: err}));

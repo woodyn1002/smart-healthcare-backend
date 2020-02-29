@@ -1,5 +1,5 @@
 import express from "express";
-import {authService} from "../services/auth";
+import * as AuthService from "../services/auth";
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.post('/register',
             });
         };
 
-        authService.register(username, password)
+        AuthService.register(username, password)
             .then(respond)
             .catch(onError);
     });
@@ -39,7 +39,7 @@ router.post('/login',
             });
         };
 
-        authService.login(username, password)
+        AuthService.login(username, password)
             .then(respond)
             .catch(onError);
     });
