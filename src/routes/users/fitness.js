@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/:username/fitness',
     validators.loggedIn, validators.canManageUser,
-    function (req, res) {
+    (req, res) => {
         fitnessService.getFitnessList(req.params.username, req.query.date)
             .then(fitnessList => {
                 res.json(fitnessList);
@@ -17,7 +17,7 @@ router.get('/:username/fitness',
 
 router.get('/:username/fitness/:date',
     validators.loggedIn, validators.canManageUser,
-    function (req, res) {
+    (req, res) => {
         fitnessService.getFitness(req.params.username, req.params.date)
             .then(fitness => {
                 if (!fitness) return res.status(404).json({error: 'fitness not found'});
@@ -29,7 +29,7 @@ router.get('/:username/fitness/:date',
 
 router.post('/:username/fitness/:date',
     validators.loggedIn, validators.canManageUser,
-    function (req, res) {
+    (req, res) => {
         fitnessService.createFitness(req.params.username, req.params.date, req.body)
             .then(fitness => {
                 res.json(fitness);
@@ -39,7 +39,7 @@ router.post('/:username/fitness/:date',
 
 router.put('/:username/fitness/:name',
     validators.loggedIn, validators.canManageUser,
-    function (req, res) {
+    (req, res) => {
         fitnessService.updateFitness(req.params.username, req.params.date, req.body)
             .then(fitness => {
                 if (!fitness) return res.status(404).json({error: 'fitness not found'});
@@ -50,7 +50,7 @@ router.put('/:username/fitness/:name',
 
 router.delete('/:username/fitness/:name',
     validators.loggedIn, validators.canManageUser,
-    function (req, res) {
+    (req, res) => {
         fitnessService.getFitness(req.params.username, req.params.date)
             .then(fitness => {
                 if (!fitness) return res.status(404).json({error: 'fitness not found'});

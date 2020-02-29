@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/:username/health-data',
     validators.loggedIn, validators.canManageUser,
-    function (req, res) {
+    (req, res) => {
         healthDataService.getHealthData(req.params.username)
             .then(healthData => {
                 if (!healthData) return res.status(404).json({error: 'health data not found'});
@@ -18,7 +18,7 @@ router.get('/:username/health-data',
 
 router.post('/:username/health-data',
     validators.loggedIn, validators.canManageUser,
-    function (req, res) {
+    (req, res) => {
         healthDataService.createHealthData(req.params.username, req.body)
             .then(healthData => {
                 res.json(healthData);
@@ -28,7 +28,7 @@ router.post('/:username/health-data',
 
 router.put('/:username/health-data',
     validators.loggedIn, validators.canManageUser,
-    function (req, res) {
+    (req, res) => {
         healthDataService.updateHealthData(req.params.username, req.body)
             .then(healthData => {
                 if (!healthData) return res.status(404).json({error: 'health data not found'});
@@ -39,7 +39,7 @@ router.put('/:username/health-data',
 
 router.delete('/:username/health-data',
     validators.loggedIn, validators.canManageUser,
-    function (req, res) {
+    (req, res) => {
         healthDataService.getHealthData(req.params.username)
             .then(healthData => {
                 if (!healthData) return res.status(404).json({error: 'health data not found'});

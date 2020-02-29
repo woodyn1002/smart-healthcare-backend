@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/:username/meals',
     validators.loggedIn, validators.canManageUser,
-    function (req, res) {
+    (req, res) => {
         mealService.getMeals(req.params.username, req.query.date)
             .then(meals => {
                 res.json(meals);
@@ -17,7 +17,7 @@ router.get('/:username/meals',
 
 router.get('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
-    function (req, res) {
+    (req, res) => {
         mealService.getMeal(req.params.username, req.params.date)
             .then(meal => {
                 if (!meal) return res.status(404).json({error: 'meal not found'});
@@ -29,7 +29,7 @@ router.get('/:username/meals/:date',
 
 router.post('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
-    function (req, res) {
+    (req, res) => {
         mealService.createMeal(req.params.username, req.params.date, req.body)
             .then(meal => {
                 res.json(meal);
@@ -39,7 +39,7 @@ router.post('/:username/meals/:date',
 
 router.put('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
-    function (req, res) {
+    (req, res) => {
         mealService.updateMeal(req.params.username, req.params.date, req.body)
             .then(meal => {
                 if (!meal) return res.status(404).json({error: 'meal not found'});
@@ -50,7 +50,7 @@ router.put('/:username/meals/:date',
 
 router.delete('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
-    function (req, res) {
+    (req, res) => {
         mealService.getMeal(req.params.username, req.params.date)
             .then(meal => {
                 if (!meal) return res.status(404).json({error: 'meal not found'});
