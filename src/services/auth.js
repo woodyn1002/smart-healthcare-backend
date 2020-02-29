@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import jwtConfig from "../config/jwt-config";
-import User from "../models/user";
+import * as UserService from "../services/user";
 
 export function verify(token) {
     return new Promise((resolve, reject) => {
@@ -16,11 +16,11 @@ export function register(username, password) {
         if (user) {
             throw new Error('username exists');
         } else {
-            return User.create({username, password});
+            return UserService.createUser(username, password);
         }
     };
 
-    return User.findByUsername(username)
+    return UserService.getUser(username)
         .then(create);
 }
 
@@ -29,7 +29,7 @@ export function login(username, password) {
         if (!user) {
             throw new Error('login failed: user not found');
         } else {
-            if (userService.verifyPassword(user, password)) {
+            if (UserService.verifyPassword(user, password)) {
                 return new Promise((resolve, reject) => {
                     jwt.sign(
                         {
@@ -52,6 +52,6 @@ export function login(username, password) {
         }
     };
 
-    return User.findByUsername(username)
+    return UserService.getUser(username)
         .then(check);
 }
