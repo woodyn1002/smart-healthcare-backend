@@ -1,6 +1,7 @@
 import express from "express";
 import * as MealService from "../../../services/meal";
 import validators from "../../../middlewares/validators";
+import {MealExistError, MealNotFoundError} from "../../../errors";
 
 const router = express.Router();
 
