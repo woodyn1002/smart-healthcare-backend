@@ -3,43 +3,36 @@ import * as AuthService from "../services/auth";
 const loggedIn = (req, res, next) => {
     const token = req.headers['x-access-token'] || req.query.token;
 
-    if (!token) {
-        return res.status(403).json({
-            error: 'not logged in'
-        });
-    }
-
-    const onError = (error) => {
-        res.status(403).json({
-            error: error.message
-        })
-    };
+    if (!token) return res.status(401).json({error: 'UnauthorizedError', message: 'Not logged in.'});
 
     AuthService.verify(token)
         .then((decoded) => {
-            req.token = {decoded};
+            req.decodedToken = decoded;
             next();
-        }).catch(onError);
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).end();
+        });
 };
 
 const isAdmin = (req, res, next) => {
-    if (req.token.decoded.isAdmin) {
+    const isAdmin = req.decodedToken.isAdmin;
+
+    if (isAdmin) {
         next();
     } else {
-        res.status(403).json({
-            error: 'no permission'
-        });
+        res.status(403).json({error: 'ForbiddenError', message: 'No permission.'});
     }
 };
 
 const canManageUser = (req, res, next) => {
-    let isAdmin = req.token.decoded.isAdmin;
-    if (isAdmin || req.token.decoded.username === req.params.username) {
+    const {username, isAdmin} = req.decodedToken;
+
+    if (isAdmin || username === req.params.username) {
         next();
     } else {
-        res.status(403).json({
-            error: 'no permission'
-        });
+        res.status(403).json({error: 'ForbiddenError', message: 'No permission.'});
     }
 };
 
