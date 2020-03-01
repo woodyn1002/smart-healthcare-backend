@@ -5,10 +5,8 @@ import {InvalidPasswordError, UsernameExistError, UserNotFoundError} from "../..
 const router = express.Router();
 
 const respondError = (res, err) => {
-    if (err instanceof UserNotFoundError || err instanceof InvalidPasswordError) {
+    if (err instanceof UserNotFoundError || err instanceof InvalidPasswordError || err instanceof UsernameExistError) {
         res.status(403).json({error: err.name, message: err.message});
-    } else if (err instanceof UsernameExistError) {
-        res.status(409).json({error: err.name, message: err.message});
     } else {
         console.error(err);
         res.status(500).end();

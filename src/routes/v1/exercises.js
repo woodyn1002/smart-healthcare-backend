@@ -6,10 +6,10 @@ import {ExerciseExistError, ExerciseNotFoundError} from "../../errors";
 const router = express.Router();
 
 const respondError = (res, err) => {
-    if (err instanceof ExerciseNotFoundError) {
+    if (err instanceof ExerciseExistError) {
+        res.status(403).json({error: err.name, message: err.message});
+    } else if (err instanceof ExerciseNotFoundError) {
         res.status(404).json({error: err.name, message: err.message});
-    } else if (err instanceof ExerciseExistError) {
-        res.status(409).json({error: err.name, message: err.message});
     } else {
         console.error(err);
         res.status(500).end();

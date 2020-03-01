@@ -6,10 +6,10 @@ import {HealthDataExistError, HealthDataNotFoundError} from "../../../errors";
 const router = express.Router();
 
 const respondError = (res, err) => {
-    if (err instanceof HealthDataNotFoundError) {
+    if (err instanceof HealthDataExistError) {
+        res.status(403).json({error: err.name, message: err.message});
+    } else if (err instanceof HealthDataNotFoundError) {
         res.status(404).json({error: err.name, message: err.message});
-    } else if (err instanceof HealthDataExistError) {
-        res.status(409).json({error: err.name, message: err.message});
     } else {
         console.error(err);
         res.status(500).end();
