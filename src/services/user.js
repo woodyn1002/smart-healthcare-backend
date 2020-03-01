@@ -3,11 +3,11 @@ import mongodbConfig from "../config/mongodb-config";
 import User from "../models/user";
 import {UsernameExistError, UserNotFoundError} from "../errors";
 
-const encryptPassword = function (password) {
+export function encryptPassword(password) {
     return crypto.createHmac('sha1', mongodbConfig.pwdSecret)
         .update(password)
         .digest('base64');
-};
+}
 
 export function createUser(username, password, email, isAdmin) {
     return User.findByUsername(username)

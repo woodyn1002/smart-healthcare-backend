@@ -1,7 +1,19 @@
 import jwt from "jsonwebtoken";
 import jwtConfig from "../config/jwt-config";
 import * as UserService from "../services/user";
-import {InvalidPasswordError, UserNotFoundError} from "../errors";
+import {InvalidPasswordError} from "../errors";
+
+function publishToken(user) {
+    return new Promise((resolve, reject) => {
+        const payload = {username: user.username, isAdmin: user.isAdmin};
+        const options = {expiresIn: '7d'};
+
+        jwt.sign(payload, jwtConfig.secret, options, (err, token) => {
+            if (err) reject(err);
+            resolve(token);
+        });
+    });
+}
 
 export function verify(token) {
     return new Promise((resolve, reject) => {
@@ -13,36 +25,14 @@ export function verify(token) {
 }
 
 export function register(username, password, email, isAdmin) {
-    return UserService.createUser(username, password, email, isAdmin);
+    const encrypted = UserService.encryptPassword(password);
+    return UserService.createUser(username, encrypted, email, isAdmin);
 }
 
 export function login(username, password) {
-    const check = (user) => {
-        if (!user) {
-            throw new UserNotFoundError(`Username ${username} was not found.`);
-        } else {
-            if (UserService.verifyPassword(user, password)) {
-                return new Promise((resolve, reject) => {
-                    jwt.sign(
-                        {
-                            username: username,
-                            isAdmin: user.isAdmin
-                        },
-                        jwtConfig.secret,
-                        {
-                            expiresIn: '7d'
-                        },
-                        (err, token) => {
-                            if (err) reject(err);
-                            resolve(token);
-                        });
-                });
-            } else {
-                throw new InvalidPasswordError();
-            }
-        }
-    };
-
     return UserService.getUser(username)
-        .then(check);
+        .then(user => {
+            if (!UserService.verifyPassword(user, password)) throw new InvalidPasswordError();
+            return publishToken(user);
+        });
 }
