@@ -44,7 +44,7 @@ router.post('/:username/meals/:date',
         const data = req.body;
 
         MealService.createMeal(username, date, data)
-            .then(meal => res.json(meal))
+            .then(meal => res.status(201).json(meal))
             .catch(err => respondError(res, err));
     });
 

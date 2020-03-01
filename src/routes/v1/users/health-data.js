@@ -33,7 +33,7 @@ router.post('/:username/health-data',
         const data = req.body;
 
         HealthDataService.createHealthData(username, data)
-            .then(healthData => res.json(healthData))
+            .then(healthData => res.status(201).json(healthData))
             .catch(err => respondError(res, err));
     });
 

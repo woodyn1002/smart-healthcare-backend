@@ -38,7 +38,7 @@ router.post('/',
         const {name, calories} = req.body;
 
         FoodService.createFood(name, calories)
-            .then(food => res.json(food))
+            .then(food => res.status(201).json(food))
             .catch(err => respondError(res, err));
     });
 

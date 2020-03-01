@@ -38,7 +38,7 @@ router.post('/',
         const {name, met} = req.body;
 
         ExerciseService.createExercise(name, met)
-            .then(exercise => res.json(exercise))
+            .then(exercise => res.status(201).json(exercise))
             .catch(err => respondError(res, err));
     });
 

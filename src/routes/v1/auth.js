@@ -18,7 +18,7 @@ router.post('/register',
         const {username, password, email} = req.body;
 
         AuthService.register(username, password, email)
-            .then((user) => res.json(user))
+            .then((user) => res.status(201).json(user))
             .catch(err => respondError(res, err));
     });
 

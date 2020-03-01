@@ -44,7 +44,7 @@ router.post('/:username/fitness/:date',
         const data = req.body;
 
         FitnessService.createFitness(username, date, data)
-            .then(fitness => res.json(fitness))
+            .then(fitness => res.status(201).json(fitness))
             .catch(err => respondError(res, err));
     });
 
