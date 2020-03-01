@@ -17,6 +17,13 @@ const healthDataSchema = new Schema({
     neutralFat: Number,
     hdlCholesterol: Number,
     fastingBloodSugar: Number
+}, {
+    toJSON: {
+        transform: function (doc, ret) {
+            delete ret._id;
+            delete ret.__v;
+        }
+    }
 });
 
 export default mongoose.model('HealthData', healthDataSchema, 'healthdata');

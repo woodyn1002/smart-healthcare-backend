@@ -11,6 +11,13 @@ const mealSchema = new Schema({
         foodName: {type: String, required: true},
         amount: {type: Number, default: 1}
     }]
+}, {
+    toJSON: {
+        transform: function (doc, ret) {
+            delete ret._id;
+            delete ret.__v;
+        }
+    }
 });
 
 export default mongoose.model('Meal', mealSchema, 'meals');

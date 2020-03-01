@@ -9,6 +9,13 @@ const fitnessSchema = new Schema({
     burntCalories: {type: Number, required: true},
     count: {type: Number, required: true},
     elapsedTime: {type: Number, required: true}
+}, {
+    toJSON: {
+        transform: function (doc, ret) {
+            delete ret._id;
+            delete ret.__v;
+        }
+    }
 });
 
 export default mongoose.model('Fitness', fitnessSchema, 'fitness');
