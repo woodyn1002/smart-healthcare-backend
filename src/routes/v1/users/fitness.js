@@ -48,7 +48,7 @@ router.post('/:username/fitness/:date',
             .catch(err => respondError(res, err));
     });
 
-router.put('/:username/fitness/:name',
+router.put('/:username/fitness/:date',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
         const {username, date} = req.params;
@@ -59,7 +59,7 @@ router.put('/:username/fitness/:name',
             .catch(err => respondError(res, err));
     });
 
-router.delete('/:username/fitness/:name',
+router.delete('/:username/fitness/:date',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
         const {username, date} = req.params;
