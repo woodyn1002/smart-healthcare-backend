@@ -18,14 +18,6 @@ export function getUser(req, res) {
         .catch(err => respondError(res, err));
 }
 
-export function deleteUser(req, res) {
-    const username = req.params.username;
-
-    UserService.deleteUser(username)
-        .then(() => res.status(204).end())
-        .catch(err => respondError(res, err));
-}
-
 export function changePassword(req, res) {
     const username = req.params.username;
     const password = req.body.password;
@@ -34,5 +26,13 @@ export function changePassword(req, res) {
 
     UserService.changePassword(username, password)
         .then(user => res.json(user))
+        .catch(err => respondError(res, err));
+}
+
+export function deleteUser(req, res) {
+    const username = req.params.username;
+
+    UserService.deleteUser(username)
+        .then(() => res.status(204).end())
         .catch(err => respondError(res, err));
 }

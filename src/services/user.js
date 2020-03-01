@@ -9,20 +9,20 @@ export function encryptPassword(password) {
         .digest('base64');
 }
 
+export function getUser(username) {
+    return User.findByUsername(username)
+        .then(user => {
+            if (!user) throw new UserNotFoundError(username);
+            return user;
+        });
+}
+
 export function createUser(username, password, email, isAdmin) {
     return User.findByUsername(username)
         .then(user => {
             if (user) throw new UsernameExistError(username);
 
             return User.create({username, password, email, isAdmin});
-        });
-}
-
-export function getUser(username) {
-    return User.findByUsername(username)
-        .then(user => {
-            if (!user) throw new UserNotFoundError(username);
-            return user;
         });
 }
 

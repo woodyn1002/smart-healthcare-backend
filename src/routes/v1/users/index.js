@@ -10,12 +10,12 @@ const router = express.Router();
 router.get('/:username',
     validators.loggedIn, validators.canManageUser,
     controllers.getUser);
-router.delete('/:username',
-    validators.loggedIn, validators.canManageUser,
-    controllers.deleteUser);
 router.post('/:username/change-password',
     validators.loggedIn, validators.canManageUser,
     controllers.changePassword);
+router.delete('/:username',
+    validators.loggedIn, validators.canManageUser,
+    controllers.deleteUser);
 
 router.use('/', healthData);
 router.use('/', meals);
