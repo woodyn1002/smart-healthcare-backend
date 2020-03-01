@@ -2,8 +2,25 @@ import express from "express";
 import * as HealthDataService from "../../../services/health-data";
 import validators from "../../../middlewares/validators";
 import {HealthDataExistError, HealthDataNotFoundError} from "../../../errors";
+import Joi from "joi";
 
 const router = express.Router();
+
+const healthDataBodyValidator = validators.body({
+    sex: Joi.string().valid('male', 'female'),
+    height: Joi.number().positive(),
+    weight: Joi.number().positive(),
+    birthdate: {
+        date: Joi.string().isoDate(),
+        isLunar: Joi.boolean()
+    },
+    ldlCholesterol: Joi.number().positive(),
+    waist: Joi.number().positive(),
+    bloodPressure: Joi.number().positive(),
+    neutralFat: Joi.number().positive(),
+    hdlCholesterol: Joi.number().positive(),
+    fastingBloodSugar: Joi.number().positive()
+});
 
 const respondError = (res, err) => {
     if (err instanceof HealthDataExistError) {
@@ -28,6 +45,7 @@ router.get('/:username/health-data',
 
 router.post('/:username/health-data',
     validators.loggedIn, validators.canManageUser,
+    healthDataBodyValidator,
     (req, res) => {
         const username = req.params.username;
         const data = req.body;
@@ -39,6 +57,7 @@ router.post('/:username/health-data',
 
 router.put('/:username/health-data',
     validators.loggedIn, validators.canManageUser,
+    healthDataBodyValidator,
     (req, res) => {
         const username = req.params.username;
         const data = req.body;

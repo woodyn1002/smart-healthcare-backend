@@ -1,6 +1,8 @@
 import express from "express";
+import Joi from "joi";
 import * as AuthService from "../../services/auth";
 import {InvalidPasswordError, UsernameExistError, UserNotFoundError} from "../../errors";
+import validators from "../../middlewares/validators";
 
 const router = express.Router();
 
@@ -14,6 +16,11 @@ const respondError = (res, err) => {
 };
 
 router.post('/register',
+    validators.body({
+        username: Joi.string().trim().alphanum().min(6).max(16).required(),
+        password: Joi.string().trim().min(6).max(20).required(),
+        email: Joi.string().trim().email()
+    }),
     (req, res) => {
         const {username, password, email} = req.body;
 
@@ -23,6 +30,10 @@ router.post('/register',
     });
 
 router.post('/login',
+    validators.body({
+        username: Joi.string().trim().alphanum().min(6).max(16).required(),
+        password: Joi.string().trim().min(6).max(20).required()
+    }),
     (req, res) => {
         const {username, password} = req.body;
 

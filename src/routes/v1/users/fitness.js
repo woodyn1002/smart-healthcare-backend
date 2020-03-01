@@ -1,4 +1,5 @@
 import express from "express";
+import Joi from "joi";
 import validators from "../../../middlewares/validators";
 import * as FitnessService from "../../../services/fitness";
 import {FitnessExistError, FitnessNotFoundError} from "../../../errors";
@@ -38,6 +39,12 @@ router.get('/:username/fitness/:date',
     });
 
 router.post('/:username/fitness/:date',
+    validators.body({
+        exerciseName: Joi.string().required(),
+        burntCalories: Joi.number().positive().required(),
+        count: Joi.number().positive().required(),
+        elapsedTime: Joi.number().positive().required(),
+    }),
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
         const {username, date} = req.params;
@@ -50,6 +57,12 @@ router.post('/:username/fitness/:date',
 
 router.put('/:username/fitness/:date',
     validators.loggedIn, validators.canManageUser,
+    validators.body({
+        exerciseName: Joi.string().required(),
+        burntCalories: Joi.number().positive().required(),
+        count: Joi.number().positive().required(),
+        elapsedTime: Joi.number().positive().required(),
+    }),
     (req, res) => {
         const {username, date} = req.params;
         const data = req.body;

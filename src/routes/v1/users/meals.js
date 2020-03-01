@@ -1,9 +1,15 @@
 import express from "express";
+import Joi from "joi";
 import * as MealService from "../../../services/meal";
 import validators from "../../../middlewares/validators";
 import {MealExistError, MealNotFoundError} from "../../../errors";
 
 const router = express.Router();
+
+const dishSchema = Joi.object().keys({
+    foodName: Joi.string().required(),
+    amount: Joi.number().positive()
+});
 
 const respondError = (res, err) => {
     if (err instanceof MealExistError) {
@@ -39,6 +45,11 @@ router.get('/:username/meals/:date',
 
 router.post('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
+    validators.body({
+        location: Joi.string(),
+        satisfactionScore: Joi.number().min(0).max(4),
+        dishes: Joi.array().items(dishSchema)
+    }),
     (req, res) => {
         const {username, date} = req.params;
         const data = req.body;
@@ -50,6 +61,11 @@ router.post('/:username/meals/:date',
 
 router.put('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
+    validators.body({
+        location: Joi.string(),
+        satisfactionScore: Joi.number().min(0).max(4),
+        dishes: Joi.array().items(dishSchema)
+    }),
     (req, res) => {
         const {username, date} = req.params;
         const data = req.body;

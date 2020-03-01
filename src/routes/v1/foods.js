@@ -2,6 +2,7 @@ import express from "express";
 import validators from "../../middlewares/validators";
 import * as FoodService from "../../services/food";
 import {FoodExistError, FoodNotFoundError} from "../../errors";
+import Joi from "joi";
 
 const router = express.Router();
 
@@ -34,6 +35,10 @@ router.get('/:name',
 
 router.post('/',
     validators.loggedIn, validators.isAdmin,
+    validators.body({
+        name: Joi.string().required(),
+        calories: Joi.number().positive().required()
+    }),
     (req, res) => {
         const {name, calories} = req.body;
 
@@ -44,6 +49,9 @@ router.post('/',
 
 router.put('/:name',
     validators.loggedIn, validators.isAdmin,
+    validators.body({
+        calories: Joi.number().positive().required()
+    }),
     (req, res) => {
         const name = req.params.name;
         const calories = req.body.calories;

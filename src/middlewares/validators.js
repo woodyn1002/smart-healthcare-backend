@@ -1,3 +1,5 @@
+import Joi from "joi";
+import lodash from "lodash";
 import * as AuthService from "../services/auth";
 
 const loggedIn = (req, res, next) => {
@@ -36,5 +38,22 @@ const canManageUser = (req, res, next) => {
     }
 };
 
-const validators = {loggedIn, isAdmin, canManageUser};
+const body = function (bodySchema) {
+    return (req, res, next) => {
+        const schema = Joi.object().keys(bodySchema);
+        const bodySchemaKeys = Object.keys(bodySchema);
+
+        let requestBodyObj = {};
+        for (let key of bodySchemaKeys) {
+            requestBodyObj[key] = lodash.get(req.body, key);
+        }
+
+        schema.validate(requestBodyObj, (err) => {
+            if (err) return res.status(400).json({error: err.name, message: err.details[0].message});
+            next();
+        });
+    }
+};
+
+const validators = {loggedIn, isAdmin, canManageUser, body};
 export default validators;

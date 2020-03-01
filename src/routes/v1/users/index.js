@@ -4,18 +4,25 @@ import healthData from "./health-data";
 import meals from "./meals";
 import fitness from "./fitness";
 import validators from "../../../middlewares/validators";
+import Joi from "joi";
 
 const router = express.Router();
 
 router.get('/',
     validators.loggedIn, validators.isAdmin,
     controllers.getUsers);
+
 router.get('/:username',
     validators.loggedIn, validators.canManageUser,
     controllers.getUser);
+
 router.post('/:username/change-password',
     validators.loggedIn, validators.canManageUser,
+    validators.body({
+        password: Joi.string().trim().min(6).max(20).required()
+    }),
     controllers.changePassword);
+
 router.delete('/:username',
     validators.loggedIn, validators.canManageUser,
     controllers.deleteUser);

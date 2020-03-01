@@ -2,6 +2,7 @@ import express from "express";
 import * as ExerciseService from "../../services/exercise";
 import validators from "../../middlewares/validators";
 import {ExerciseExistError, ExerciseNotFoundError} from "../../errors";
+import Joi from "joi";
 
 const router = express.Router();
 
@@ -34,6 +35,10 @@ router.get('/:name',
 
 router.post('/',
     validators.loggedIn, validators.isAdmin,
+    validators.body({
+        name: Joi.string().required(),
+        met: Joi.number().positive().required()
+    }),
     (req, res) => {
         const {name, met} = req.body;
 
@@ -44,6 +49,9 @@ router.post('/',
 
 router.put('/:name',
     validators.loggedIn, validators.isAdmin,
+    validators.body({
+        met: Joi.number().positive().required()
+    }),
     (req, res) => {
         const name = req.params.name;
         const met = req.body.met;
