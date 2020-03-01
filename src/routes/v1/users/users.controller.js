@@ -10,6 +10,12 @@ const respondError = (res, err) => {
     }
 };
 
+export function getUsers(req, res) {
+    UserService.getUsers()
+        .then(users => res.json(users))
+        .catch(err => respondError(res, err));
+}
+
 export function getUser(req, res) {
     const username = req.params.username;
 

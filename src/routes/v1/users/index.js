@@ -7,6 +7,9 @@ import validators from "../../../middlewares/validators";
 
 const router = express.Router();
 
+router.get('/',
+    validators.loggedIn, validators.isAdmin,
+    controllers.getUsers);
 router.get('/:username',
     validators.loggedIn, validators.canManageUser,
     controllers.getUser);

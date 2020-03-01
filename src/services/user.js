@@ -9,6 +9,10 @@ export function encryptPassword(password) {
         .digest('base64');
 }
 
+export function getUsers() {
+    return User.find();
+}
+
 export function getUser(username) {
     return User.findByUsername(username)
         .then(user => {
