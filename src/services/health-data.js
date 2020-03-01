@@ -1,29 +1,38 @@
 import HealthData from "../models/health-data";
+import {HealthDataExistError, HealthDataNotFoundError} from "../errors";
 
 export function getHealthData(username) {
-    return HealthData.findOne({username});
+    return HealthData.findOne({username})
+        .then(healthData => {
+            if (!healthData) throw new HealthDataNotFoundError(username);
+            return healthData;
+        });
 }
 
 export function createHealthData(username, data) {
-    return HealthData.create({
-        username,
-        sex: data.sex,
-        height: data.height,
-        weight: data.weight,
-        birthdate: data.birthdate,
-        ldlCholesterol: data.ldlCholesterol,
-        waist: data.waist,
-        bloodPressure: data.bloodPressure,
-        neutralFat: data.neutralFat,
-        hdlCholesterol: data.hdlCholesterol,
-        fastingBloodSugar: data.fastingBloodSugar
-    });
+    return HealthData.findOne({username})
+        .then(healthData => {
+            if (healthData) throw new HealthDataExistError(username);
+            return HealthData.create({
+                username,
+                sex: data.sex,
+                height: data.height,
+                weight: data.weight,
+                birthdate: data.birthdate,
+                ldlCholesterol: data.ldlCholesterol,
+                waist: data.waist,
+                bloodPressure: data.bloodPressure,
+                neutralFat: data.neutralFat,
+                hdlCholesterol: data.hdlCholesterol,
+                fastingBloodSugar: data.fastingBloodSugar
+            });
+        });
 }
 
 export function updateHealthData(username, data) {
     return HealthData.findOne({username})
         .then(healthData => {
-            if (!healthData) return;
+            if (!healthData) throw new HealthDataNotFoundError(username);
 
             if (data.sex) healthData.sex = data.sex;
             if (data.height) healthData.height = data.height;
@@ -44,5 +53,8 @@ export function updateHealthData(username, data) {
 }
 
 export function deleteHealthData(username) {
-    return HealthData.deleteOne({username});
+    return HealthData.findOneAndDelete({username})
+        .then(healthData => {
+            if (!healthData) throw new HealthDataNotFoundError(username);
+        });
 }

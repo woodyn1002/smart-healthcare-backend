@@ -1,31 +1,31 @@
 import * as UserService from "../../../services/user";
+import {UserNotFoundError} from "../../../errors";
+
+const respondError = (res, err) => {
+    if (err instanceof UserNotFoundError) {
+        res.status(404).json({error: err.name, message: err.message});
+    } else {
+        console.error(err);
+        res.status(500).end();
+    }
+};
 
 export function getUser(req, res) {
     UserService.getUser(req.params.username)
-        .then((user) => {
-            if (!user) return res.status(404).json({error: 'user not found'});
-            res.json(user);
-        })
-        .catch(err => res.status(500).json({error: err}));
+        .then(user => res.json(user))
+        .catch(err => respondError(res, err));
 }
 
 export function deleteUser(req, res) {
-    UserService.getUser(req.params.username)
-        .then(user => {
-            if (!user) return res.status(404).json({error: 'user not found'});
-            return UserService.deleteUser(req.params.username);
-        })
+    UserService.deleteUser(req.params.username)
         .then(() => res.status(204).end())
-        .catch(err => res.status(500).json({error: err}));
+        .catch(err => respondError(res, err));
 }
 
 export function changePassword(req, res) {
     if (!req.body.password) return res.status(400).json({error: 'password required'});
 
     UserService.changePassword(req.params.username, req.body.password)
-        .then(user => {
-            if (!user) return res.status(404).json({error: 'user not found'});
-            res.json(user);
-        })
-        .catch(err => res.status(500).json({error: err}));
+        .then(user => res.json(user))
+        .catch(err => respondError(res, err));
 }

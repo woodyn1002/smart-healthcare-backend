@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import jwtConfig from "../config/jwt-config";
 import * as UserService from "../services/user";
+import {InvalidPasswordError, UserNotFoundError} from "../errors";
 
 export function verify(token) {
     return new Promise((resolve, reject) => {
@@ -12,22 +13,13 @@ export function verify(token) {
 }
 
 export function register(username, password, email, isAdmin) {
-    const create = (user) => {
-        if (user) {
-            throw new Error('username exists');
-        } else {
-            return UserService.createUser(username, password, email, isAdmin);
-        }
-    };
-
-    return UserService.getUser(username)
-        .then(create);
+    return UserService.createUser(username, password, email, isAdmin);
 }
 
 export function login(username, password) {
     const check = (user) => {
         if (!user) {
-            throw new Error('login failed: user not found');
+            throw new UserNotFoundError(`Username ${username} was not found.`);
         } else {
             if (UserService.verifyPassword(user, password)) {
                 return new Promise((resolve, reject) => {
@@ -46,7 +38,7 @@ export function login(username, password) {
                         });
                 });
             } else {
-                throw new Error('login failed: invalid password');
+                throw new InvalidPasswordError();
             }
         }
     };

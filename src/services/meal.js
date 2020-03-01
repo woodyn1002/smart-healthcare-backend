@@ -1,5 +1,6 @@
 import Meal from "../models/meal";
 import moment from "moment";
+import {MealExistError, MealNotFoundError} from "../errors";
 
 export function getMeals(username, date) {
     let conditions = {username};
@@ -14,23 +15,31 @@ export function getMeals(username, date) {
 }
 
 export function getMeal(username, date) {
-    return Meal.findOne({username, date});
+    return Meal.findOne({username, date})
+        .then(meal => {
+            if (!meal) throw new MealNotFoundError(username, date);
+            return meal;
+        });
 }
 
 export function createMeal(username, date, data) {
-    return Meal.create({
-        username,
-        date,
-        location: data.location,
-        satisfactionScore: data.satisfactionScore,
-        foods: data.foods
-    });
+    return Meal.findOne({username, date})
+        .then(meal => {
+            if (meal) throw new MealExistError(username, date);
+            return Meal.create({
+                username,
+                date,
+                location: data.location,
+                satisfactionScore: data.satisfactionScore,
+                foods: data.foods
+            });
+        });
 }
 
 export function updateMeal(username, date, data) {
     return Meal.findOne({username, date})
         .then(meal => {
-            if (!meal) return;
+            if (!meal) throw new MealNotFoundError(username, date);
 
             if (data.location) meal.location = data.location;
             if (data.satisfactionScore) meal.satisfactionScore = data.satisfactionScore;
@@ -41,5 +50,8 @@ export function updateMeal(username, date, data) {
 }
 
 export function deleteMeal(username, date) {
-    return Meal.deleteOne({username, date});
+    return Meal.findOneAndDelete({username, date})
+        .then(meal => {
+            if (!meal) throw new MealNotFoundError(username, date);
+        });
 }

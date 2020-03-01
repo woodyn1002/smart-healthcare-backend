@@ -1,5 +1,6 @@
 import express from "express";
 import * as AuthService from "../../services/auth";
+import {InvalidPasswordError, UsernameExistError, UserNotFoundError} from "../../errors";
 
 const router = express.Router();
 
@@ -11,10 +12,13 @@ router.post('/register',
             res.json(user);
         };
 
-        const onError = (error) => {
-            res.status(409).json({
-                message: error.message
-            });
+        const onError = (err) => {
+            if (err instanceof UsernameExistError)
+                res.status(409).json({error: err.name, message: err.message});
+            else {
+                console.error(err);
+                res.status(500).end();
+            }
         };
 
         AuthService.register(username, password, email)
@@ -34,9 +38,12 @@ router.post('/login',
         };
 
         const onError = (err) => {
-            res.status(403).json({
-                message: err.message
-            });
+            if (err instanceof UserNotFoundError || err instanceof InvalidPasswordError)
+                res.status(403).json({error: err.name, message: err.message});
+            else {
+                console.error(err);
+                res.status(500).end();
+            }
         };
 
         AuthService.login(username, password)

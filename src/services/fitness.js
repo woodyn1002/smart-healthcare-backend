@@ -1,5 +1,6 @@
 import Fitness from "../models/fitness";
 import moment from "moment";
+import {FitnessExistError, FitnessNotFoundError} from "../errors";
 
 export function getFitnessList(username, date) {
     let conditions = {username};
@@ -14,24 +15,33 @@ export function getFitnessList(username, date) {
 }
 
 export function getFitness(username, date) {
-    return Fitness.findOne({username, date});
+    return Fitness.findOne({username, date})
+        .then(fitness => {
+            if (!fitness) throw new FitnessNotFoundError(username, date);
+            return fitness;
+        })
 }
 
 export function createFitness(username, date, data) {
-    return Fitness.create({
-        username,
-        date,
-        exerciseName: data.exerciseName,
-        burntCalories: data.burntCalories,
-        count: data.count,
-        elapsedTime: data.elapsedTime
-    });
+    return Fitness.findOne({username, date})
+        .then(fitness => {
+            if (fitness) throw new FitnessExistError(username, date);
+
+            return Fitness.create({
+                username,
+                date,
+                exerciseName: data.exerciseName,
+                burntCalories: data.burntCalories,
+                count: data.count,
+                elapsedTime: data.elapsedTime
+            });
+        });
 }
 
 export function updateFitness(username, date, data) {
     return Fitness.findOne({username, date})
         .then(fitness => {
-            if (!fitness) return;
+            if (!fitness) throw new FitnessNotFoundError(username, date);
 
             if (data.exerciseName) fitness.exerciseName = data.exerciseName;
             if (data.burntCalories) fitness.burntCalories = data.burntCalories;
@@ -43,5 +53,8 @@ export function updateFitness(username, date, data) {
 }
 
 export function deleteFitness(username, date) {
-    return Fitness.deleteOne({username, date});
+    return Fitness.findOneAndDelete({username, date})
+        .then(fitness => {
+            if (!fitness) throw new FitnessNotFoundError(username, date);
+        });
 }
