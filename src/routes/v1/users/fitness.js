@@ -39,6 +39,7 @@ router.get('/:username/fitness/:date',
     });
 
 router.post('/:username/fitness/:date',
+    validators.loggedIn, validators.canManageUser,
     validators.body({
         exerciseName: Joi.string().required(),
         burntCalories: Joi.number().positive().required(),
