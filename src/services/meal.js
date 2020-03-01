@@ -31,7 +31,7 @@ export function createMeal(username, date, data) {
                 date,
                 location: data.location,
                 satisfactionScore: data.satisfactionScore,
-                foods: data.foods
+                dishes: data.dishes
             });
         });
 }
@@ -43,7 +43,7 @@ export function updateMeal(username, date, data) {
 
             if (data.location) meal.location = data.location;
             if (data.satisfactionScore) meal.satisfactionScore = data.satisfactionScore;
-            if (data.foods) meal.foods = data.foods;
+            if (data.dishes) meal.dishes = data.dishes;
 
             return meal.save();
         });
