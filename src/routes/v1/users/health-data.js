@@ -19,7 +19,9 @@ const respondError = (res, err) => {
 router.get('/:username/health-data',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        HealthDataService.getHealthData(req.params.username)
+        const username = req.params.username;
+
+        HealthDataService.getHealthData(username)
             .then(healthData => res.json(healthData))
             .catch(err => respondError(res, err));
     });
@@ -27,7 +29,10 @@ router.get('/:username/health-data',
 router.post('/:username/health-data',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        HealthDataService.createHealthData(req.params.username, req.body)
+        const username = req.params.username;
+        const data = req.body;
+
+        HealthDataService.createHealthData(username, data)
             .then(healthData => res.json(healthData))
             .catch(err => respondError(res, err));
     });
@@ -35,7 +40,10 @@ router.post('/:username/health-data',
 router.put('/:username/health-data',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        HealthDataService.updateHealthData(req.params.username, req.body)
+        const username = req.params.username;
+        const data = req.body;
+
+        HealthDataService.updateHealthData(username, data)
             .then(healthData => res.json(healthData))
             .catch(err => respondError(res, err));
     });
@@ -43,7 +51,9 @@ router.put('/:username/health-data',
 router.delete('/:username/health-data',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        HealthDataService.deleteHealthData(req.params.username)
+        const username = req.params.username;
+
+        HealthDataService.deleteHealthData(username)
             .then(() => res.status(204).end())
             .catch(err => respondError(res, err));
     });

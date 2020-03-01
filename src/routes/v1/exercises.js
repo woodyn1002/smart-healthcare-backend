@@ -25,7 +25,9 @@ router.get('/',
 
 router.get('/:name',
     (req, res) => {
-        ExerciseService.getExercise(req.params.name)
+        const name = req.params.name;
+
+        ExerciseService.getExercise(name)
             .then(exercise => res.json(exercise))
             .catch(err => respondError(res, err));
     });
@@ -33,7 +35,9 @@ router.get('/:name',
 router.post('/',
     validators.loggedIn, validators.isAdmin,
     (req, res) => {
-        ExerciseService.createExercise(req.body.name, req.body.met)
+        const {name, met} = req.body;
+
+        ExerciseService.createExercise(name, met)
             .then(exercise => res.json(exercise))
             .catch(err => respondError(res, err));
     });
@@ -41,7 +45,10 @@ router.post('/',
 router.put('/:name',
     validators.loggedIn, validators.isAdmin,
     (req, res) => {
-        ExerciseService.updateExercise(req.params.name, req.body.met)
+        const name = req.params.name;
+        const met = req.body.met;
+
+        ExerciseService.updateExercise(name, met)
             .then(exercise => res.json(exercise))
             .catch(err => respondError(res, err));
     });
@@ -49,7 +56,9 @@ router.put('/:name',
 router.delete('/:name',
     validators.loggedIn, validators.isAdmin,
     (req, res) => {
-        ExerciseService.deleteExercise(req.params.name)
+        const name = req.params.name;
+
+        ExerciseService.deleteExercise(name)
             .then(() => res.status(204).end())
             .catch(err => respondError(res, err));
     });

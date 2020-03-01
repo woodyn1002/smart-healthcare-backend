@@ -25,7 +25,9 @@ router.get('/',
 
 router.get('/:name',
     (req, res) => {
-        FoodService.getFood(req.params.name)
+        const name = req.params.name;
+
+        FoodService.getFood(name)
             .then(food => res.json(food))
             .catch(err => respondError(res, err));
     });
@@ -33,7 +35,9 @@ router.get('/:name',
 router.post('/',
     validators.loggedIn, validators.isAdmin,
     (req, res) => {
-        FoodService.createFood(req.body.name, req.body.calories)
+        const {name, calories} = req.body;
+
+        FoodService.createFood(name, calories)
             .then(food => res.json(food))
             .catch(err => respondError(res, err));
     });
@@ -41,7 +45,10 @@ router.post('/',
 router.put('/:name',
     validators.loggedIn, validators.isAdmin,
     (req, res) => {
-        FoodService.updateFood(req.params.name, req.body.calories)
+        const name = req.params.name;
+        const calories = req.body.calories;
+
+        FoodService.updateFood(name, calories)
             .then(food => res.json(food))
             .catch(err => respondError(res, err));
     });
@@ -49,7 +56,9 @@ router.put('/:name',
 router.delete('/:name',
     validators.loggedIn, validators.isAdmin,
     (req, res) => {
-        FoodService.deleteFood(req.params.name)
+        const name = req.params.name;
+
+        FoodService.deleteFood(name)
             .then(() => res.status(204).end())
             .catch(err => respondError(res, err));
     });

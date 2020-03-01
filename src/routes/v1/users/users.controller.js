@@ -11,21 +11,28 @@ const respondError = (res, err) => {
 };
 
 export function getUser(req, res) {
-    UserService.getUser(req.params.username)
+    const username = req.params.username;
+
+    UserService.getUser(username)
         .then(user => res.json(user))
         .catch(err => respondError(res, err));
 }
 
 export function deleteUser(req, res) {
-    UserService.deleteUser(req.params.username)
+    const username = req.params.username;
+
+    UserService.deleteUser(username)
         .then(() => res.status(204).end())
         .catch(err => respondError(res, err));
 }
 
 export function changePassword(req, res) {
-    if (!req.body.password) return res.status(400).json({error: 'password required'});
+    const username = req.params.username;
+    const password = req.body.password;
 
-    UserService.changePassword(req.params.username, req.body.password)
+    if (!password) return res.status(400).json({error: 'password required'});
+
+    UserService.changePassword(username, password)
         .then(user => res.json(user))
         .catch(err => respondError(res, err));
 }

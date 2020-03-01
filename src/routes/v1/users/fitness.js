@@ -19,7 +19,10 @@ const respondError = (res, err) => {
 router.get('/:username/fitness',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        FitnessService.getFitnessList(req.params.username, req.query.date)
+        const username = req.params.username;
+        const date = req.query.date;
+
+        FitnessService.getFitnessList(username, date)
             .then(fitnessList => res.json(fitnessList))
             .catch(err => respondError(res, err));
     });
@@ -27,7 +30,9 @@ router.get('/:username/fitness',
 router.get('/:username/fitness/:date',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        FitnessService.getFitness(req.params.username, req.params.date)
+        const {username, date} = req.params;
+
+        FitnessService.getFitness(username, date)
             .then(fitness => res.json(fitness))
             .catch(err => respondError(res, err));
     });
@@ -35,7 +40,10 @@ router.get('/:username/fitness/:date',
 router.post('/:username/fitness/:date',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        FitnessService.createFitness(req.params.username, req.params.date, req.body)
+        const {username, date} = req.params;
+        const data = req.body;
+
+        FitnessService.createFitness(username, date, data)
             .then(fitness => res.json(fitness))
             .catch(err => respondError(res, err));
     });
@@ -43,7 +51,10 @@ router.post('/:username/fitness/:date',
 router.put('/:username/fitness/:name',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        FitnessService.updateFitness(req.params.username, req.params.date, req.body)
+        const {username, date} = req.params;
+        const data = req.body;
+
+        FitnessService.updateFitness(username, date, data)
             .then(fitness => res.json(fitness))
             .catch(err => respondError(res, err));
     });
@@ -51,7 +62,9 @@ router.put('/:username/fitness/:name',
 router.delete('/:username/fitness/:name',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        FitnessService.deleteFitness(req.params.username, req.params.date)
+        const {username, date} = req.params;
+
+        FitnessService.deleteFitness(username, date)
             .then(() => res.status(204).end())
             .catch(err => respondError(res, err));
     });

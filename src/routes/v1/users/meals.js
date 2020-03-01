@@ -19,7 +19,10 @@ const respondError = (res, err) => {
 router.get('/:username/meals',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        MealService.getMeals(req.params.username, req.query.date)
+        const username = req.params.username;
+        const date = req.query.date;
+
+        MealService.getMeals(username, date)
             .then(meals => res.json(meals))
             .catch(err => respondError(res, err));
     });
@@ -27,7 +30,9 @@ router.get('/:username/meals',
 router.get('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        MealService.getMeal(req.params.username, req.params.date)
+        const {username, date} = req.params;
+
+        MealService.getMeal(username, date)
             .then(meal => res.json(meal))
             .catch(err => respondError(res, err));
     });
@@ -35,7 +40,10 @@ router.get('/:username/meals/:date',
 router.post('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        MealService.createMeal(req.params.username, req.params.date, req.body)
+        const {username, date} = req.params;
+        const data = req.body;
+
+        MealService.createMeal(username, date, data)
             .then(meal => res.json(meal))
             .catch(err => respondError(res, err));
     });
@@ -43,7 +51,10 @@ router.post('/:username/meals/:date',
 router.put('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        MealService.updateMeal(req.params.username, req.params.date, req.body)
+        const {username, date} = req.params;
+        const data = req.body;
+
+        MealService.updateMeal(username, date, data)
             .then(meal => res.json(meal))
             .catch(err => respondError(res, err));
     });
@@ -51,7 +62,9 @@ router.put('/:username/meals/:date',
 router.delete('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        MealService.deleteMeal(req.params.username, req.params.date)
+        const {username, date} = req.params;
+
+        MealService.deleteMeal(username, date)
             .then(() => res.status(204).end())
             .catch(err => respondError(res, err));
     });
