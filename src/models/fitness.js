@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const fitnessSchema = new Schema({
-    username: {type: String, index: true, unique: true, required: true},
+    username: {type: String, index: true, required: true},
     date: {type: Date, index: true, required: true},
     exerciseName: {type: String, required: true},
     burntCalories: {type: Number, required: true},
