@@ -10,7 +10,7 @@ function publishToken(user) {
 
         jwt.sign(payload, jwtConfig.secret, options, (err, token) => {
             if (err) reject(err);
-            resolve(token);
+            resolve({user, token});
         });
     });
 }

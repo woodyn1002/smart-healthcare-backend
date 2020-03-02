@@ -38,7 +38,11 @@ router.post('/login',
         const {username, password} = req.body;
 
         AuthService.login(username, password)
-            .then(token => res.json({token, message: 'logged in successfully'}))
+            .then(result => {
+                const response = result.user.toJSON();
+                response.token = result.token;
+                res.json(response);
+            })
             .catch(err => respondError(res, err));
     });
 
