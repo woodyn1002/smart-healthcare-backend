@@ -31,8 +31,8 @@ router.post('/register',
 
 router.post('/login',
     validators.body({
-        username: Joi.string().trim().alphanum().min(6).max(16).required(),
-        password: Joi.string().trim().min(6).max(20).required()
+        username: Joi.string().trim().required(),
+        password: Joi.string().trim().required()
     }),
     (req, res) => {
         const {username, password} = req.body;
