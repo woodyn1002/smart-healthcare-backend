@@ -31,14 +31,18 @@ router.post('/register',
 
 router.post('/login',
     validators.body({
-        username: Joi.string().trim().alphanum().min(6).max(16).required(),
-        password: Joi.string().trim().min(6).max(20).required()
+        username: Joi.string().trim().required(),
+        password: Joi.string().trim().required()
     }),
     (req, res) => {
         const {username, password} = req.body;
 
         AuthService.login(username, password)
-            .then(token => res.json({token, message: 'logged in successfully'}))
+            .then(result => {
+                const response = result.user.toJSON();
+                response.token = result.token;
+                res.json(response);
+            })
             .catch(err => respondError(res, err));
     });
 
