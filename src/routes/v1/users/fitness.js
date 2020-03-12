@@ -23,13 +23,21 @@ router.get('/:username/fitness',
         username: Joi.string().required()
     }),
     validators.query({
-        date: Joi.string().isoDate()
+        date: Joi.string().isoDate(),
+        options: {
+            date: Joi.string(),
+            fromDate: Joi.string().isoDate(),
+            toDate: Joi.string().isoDate(),
+            limit: Joi.number().positive(),
+            sortByDates: Joi.boolean(),
+            sortByDatesDesc: Joi.boolean()
+        }
     }),
     (req, res) => {
         const username = req.params.username;
-        const date = req.query.date;
+        const options = req.query;
 
-        FitnessService.getFitnessList(username, date)
+        FitnessService.searchFitness(username, options)
             .then(fitnessList => res.json(fitnessList))
             .catch(err => respondError(res, err));
     });

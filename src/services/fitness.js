@@ -2,16 +2,27 @@ import Fitness from "../models/fitness";
 import moment from "moment";
 import {FitnessExistError, FitnessNotFoundError} from "../errors";
 
-export function getFitnessList(username, date) {
+export function searchFitness(username, options) {
     let conditions = {username};
 
-    if (date !== undefined) {
-        let gteDate = moment(date).set({hour: 0, minute: 0, second: 0, millisecond: 0});
-        let ltDate = moment(gteDate).add(1, 'days');
-        conditions.date = {$gte: gteDate, $lt: ltDate};
+    if (options.date) {
+        let fromDate = moment(options.date).set({hour: 0, minute: 0, second: 0, millisecond: 0});
+        let toDate = moment(fromDate).add(1, 'days');
+        conditions.date = {$gte: fromDate, $lt: toDate};
+    }
+    if (options.fromDate) {
+        options.fromDate = moment(options.fromDate).set({hour: 0, minute: 0, second: 0, millisecond: 0});
+        options.toDate = moment(options.fromDate).add(1, 'days');
+        conditions.date = {$gte: options.fromDate, $lt: options.toDate};
     }
 
-    return Fitness.find(conditions);
+    let query = Fitness.find(conditions);
+
+    if (options.limit) query = query.limit(options.limit);
+    if (options.sortByDates) query = query.sort({date: 1});
+    if (options.sortByDatesDesc) query = query.sort({date: -1});
+
+    return query;
 }
 
 export function getFitness(username, date) {
