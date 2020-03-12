@@ -37,12 +37,13 @@ router.post('/',
     validators.loggedIn, validators.isAdmin,
     validators.body({
         id: Joi.string().required(),
+        name: Joi.string().required(),
         calories: Joi.number().positive().required()
     }),
     (req, res) => {
-        const {id, calories} = req.body;
+        const {id, name, calories} = req.body;
 
-        FoodService.createFood(id, calories)
+        FoodService.createFood(id, name, calories)
             .then(food => res.status(201).json(food))
             .catch(err => respondError(res, err));
     });
@@ -50,13 +51,14 @@ router.post('/',
 router.put('/:foodId',
     validators.loggedIn, validators.isAdmin,
     validators.body({
+        name: Joi.string().required(),
         calories: Joi.number().positive().required()
     }),
     (req, res) => {
         const id = req.params.foodId;
-        const calories = req.body.calories;
+        const {name, calories} = req.body;
 
-        FoodService.updateFood(id, calories)
+        FoodService.updateFood(id, name, calories)
             .then(food => res.json(food))
             .catch(err => respondError(res, err));
     });

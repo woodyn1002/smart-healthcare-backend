@@ -13,19 +13,20 @@ export function getFood(name) {
         });
 }
 
-export function createFood(id, calories) {
+export function createFood(id, name, calories) {
     return Food.findOne({id})
         .then(food => {
             if (food) throw new FoodExistError(id);
-            return Food.create({id, calories});
+            return Food.create({id, name, calories});
         });
 }
 
-export function updateFood(id, calories) {
+export function updateFood(id, name, calories) {
     return Food.findOne({id})
         .then(food => {
             if (!food) throw new FoodNotFoundError(id);
 
+            food.name = name;
             food.calories = calories;
             return food.save();
         });
