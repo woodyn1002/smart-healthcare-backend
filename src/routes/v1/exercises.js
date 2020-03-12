@@ -25,6 +25,9 @@ router.get('/',
     });
 
 router.get('/:exerciseId',
+    validators.params({
+        exerciseId: Joi.string().required()
+    }),
     (req, res) => {
         const id = req.params.exerciseId;
 
@@ -50,6 +53,9 @@ router.post('/',
 
 router.put('/:exerciseId',
     validators.loggedIn, validators.isAdmin,
+    validators.params({
+        exerciseId: Joi.string().required()
+    }),
     validators.body({
         name: Joi.string(),
         met: Joi.number().positive()
@@ -65,6 +71,9 @@ router.put('/:exerciseId',
 
 router.delete('/:exerciseId',
     validators.loggedIn, validators.isAdmin,
+    validators.params({
+        exerciseId: Joi.string().required()
+    }),
     (req, res) => {
         const id = req.params.exerciseId;
 

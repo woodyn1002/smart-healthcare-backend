@@ -45,6 +45,9 @@ const respondError = (res, err) => {
 
 router.get('/:username/health-data',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required()
+    }),
     (req, res) => {
         const username = req.params.username;
 
@@ -55,6 +58,9 @@ router.get('/:username/health-data',
 
 router.post('/:username/health-data',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required()
+    }),
     healthDataBodyValidator,
     (req, res) => {
         const username = req.params.username;
@@ -67,6 +73,9 @@ router.post('/:username/health-data',
 
 router.put('/:username/health-data',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required()
+    }),
     healthDataBodyValidator,
     (req, res) => {
         const username = req.params.username;
@@ -79,6 +88,9 @@ router.put('/:username/health-data',
 
 router.delete('/:username/health-data',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required()
+    }),
     (req, res) => {
         const username = req.params.username;
 

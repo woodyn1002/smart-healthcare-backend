@@ -19,6 +19,12 @@ const respondError = (res, err) => {
 
 router.get('/:username/fitness',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required()
+    }),
+    validators.query({
+        date: Joi.string().isoDate()
+    }),
     (req, res) => {
         const username = req.params.username;
         const date = req.query.date;
@@ -30,6 +36,10 @@ router.get('/:username/fitness',
 
 router.get('/:username/fitness/:date',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required(),
+        date: Joi.string().isoDate().required()
+    }),
     (req, res) => {
         const {username, date} = req.params;
 
@@ -40,6 +50,10 @@ router.get('/:username/fitness/:date',
 
 router.post('/:username/fitness/:date',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required(),
+        date: Joi.string().isoDate().required()
+    }),
     validators.body({
         exerciseId: Joi.string().required(),
         burntCalories: Joi.number().positive().required(),
@@ -59,6 +73,10 @@ router.post('/:username/fitness/:date',
 
 router.put('/:username/fitness/:date',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required(),
+        date: Joi.string().isoDate().required()
+    }),
     validators.body({
         exerciseId: Joi.string().required(),
         burntCalories: Joi.number().positive().required(),
@@ -77,6 +95,10 @@ router.put('/:username/fitness/:date',
 
 router.delete('/:username/fitness/:date',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required(),
+        date: Joi.string().isoDate().required()
+    }),
     (req, res) => {
         const {username, date} = req.params;
 

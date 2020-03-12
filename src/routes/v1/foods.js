@@ -25,6 +25,9 @@ router.get('/',
     });
 
 router.get('/:foodId',
+    validators.params({
+        foodId: Joi.string().required()
+    }),
     (req, res) => {
         const id = req.params.foodId;
 
@@ -50,6 +53,9 @@ router.post('/',
 
 router.put('/:foodId',
     validators.loggedIn, validators.isAdmin,
+    validators.params({
+        foodId: Joi.string().required()
+    }),
     validators.body({
         name: Joi.string(),
         calories: Joi.number().positive()
@@ -65,6 +71,9 @@ router.put('/:foodId',
 
 router.delete('/:foodId',
     validators.loggedIn, validators.isAdmin,
+    validators.params({
+        foodId: Joi.string().required()
+    }),
     (req, res) => {
         const id = req.params.foodId;
 

@@ -14,10 +14,16 @@ router.get('/',
 
 router.get('/:username',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required()
+    }),
     controllers.getUser);
 
 router.post('/:username/change-password',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required()
+    }),
     validators.body({
         password: Joi.string().trim().min(6).max(20).required()
     }),
@@ -25,6 +31,9 @@ router.post('/:username/change-password',
 
 router.delete('/:username',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required()
+    }),
     controllers.deleteUser);
 
 router.use('/', healthData);

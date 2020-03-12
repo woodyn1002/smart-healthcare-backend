@@ -24,6 +24,12 @@ const respondError = (res, err) => {
 
 router.get('/:username/meals',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required()
+    }),
+    validators.query({
+        date: Joi.string().isoDate()
+    }),
     (req, res) => {
         const username = req.params.username;
         const date = req.query.date;
@@ -35,6 +41,10 @@ router.get('/:username/meals',
 
 router.get('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required(),
+        date: Joi.string().isoDate().required()
+    }),
     (req, res) => {
         const {username, date} = req.params;
 
@@ -45,6 +55,10 @@ router.get('/:username/meals/:date',
 
 router.post('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required(),
+        date: Joi.string().isoDate().required()
+    }),
     validators.body({
         location: Joi.string(),
         satisfactionScore: Joi.number().min(0).max(4),
@@ -61,6 +75,10 @@ router.post('/:username/meals/:date',
 
 router.put('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required(),
+        date: Joi.string().isoDate().required()
+    }),
     validators.body({
         location: Joi.string(),
         satisfactionScore: Joi.number().min(0).max(4),
@@ -77,6 +95,10 @@ router.put('/:username/meals/:date',
 
 router.delete('/:username/meals/:date',
     validators.loggedIn, validators.canManageUser,
+    validators.params({
+        username: Joi.string().required(),
+        date: Joi.string().isoDate().required()
+    }),
     (req, res) => {
         const {username, date} = req.params;
 
