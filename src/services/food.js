@@ -26,8 +26,8 @@ export function updateFood(id, name, calories) {
         .then(food => {
             if (!food) throw new FoodNotFoundError(id);
 
-            food.name = name;
-            food.calories = calories;
+            if (name) food.name = name;
+            if (calories) food.calories = calories;
             return food.save();
         });
 }
