@@ -30,13 +30,17 @@ export function createUser(username, password, email, fullName, isAdmin) {
         });
 }
 
-export function changePassword(username, newPassword) {
+export function updateUser(username, password, email, fullName, isAdmin) {
     return User.findByUsername(username)
         .then(user => {
             if (!user) throw new UserNotFoundError(username);
 
-            user.password = encryptPassword(newPassword);
-            return user.save();
+            if (password) user.password = encryptPassword(password);
+            if (email) user.email = email;
+            if (fullName) user.fullName = fullName;
+            if (isAdmin) user.isAdmin = isAdmin;
+
+            return User.create({username, password, email, fullName, isAdmin});
         });
 }
 

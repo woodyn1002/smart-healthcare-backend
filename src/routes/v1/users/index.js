@@ -43,21 +43,28 @@ router.get('/:username',
             .catch(err => respondError(res, err));
     });
 
-router.post('/:username/change-password',
+router.put('/:username',
     validators.loggedIn, validators.canManageUser,
     validators.params({
         username: Joi.string().required()
     }),
     validators.body({
-        password: Joi.string().trim().min(6).max(20).required()
+        password: Joi.string().trim().min(6).max(20),
+        email: Joi.string().trim().email(),
+        fullName: Joi.string().email(),
+        isAdmin: Joi.boolean()
     }),
     (req, res) => {
         const username = req.params.username;
-        const password = req.body.password;
+        const {password, email, fullName, isAdmin} = req.body;
 
         if (!password) return res.status(400).json({error: 'password required'});
+        if (isAdmin && !req.decodedToken.isAdmin) return res.status(403).json({
+            error: 'ForbiddenError',
+            message: 'No permission.'
+        });
 
-        UserService.changePassword(username, password)
+        UserService.updateUser(username, password, email, fullName, isAdmin)
             .then(user => res.json(user))
             .catch(err => respondError(res, err));
     });
