@@ -33,7 +33,8 @@ export function createFitness(username, date, data) {
                 exerciseId: data.exerciseId,
                 burntCalories: data.burntCalories,
                 count: data.count,
-                elapsedTime: data.elapsedTime
+                elapsedTime: data.elapsedTime,
+                intensity: data.intensity
             });
         });
 }
@@ -47,6 +48,7 @@ export function updateFitness(username, date, data) {
             if (data.burntCalories) fitness.burntCalories = data.burntCalories;
             if (data.count) fitness.count = data.count;
             if (data.elapsedTime) fitness.elapsedTime = data.elapsedTime;
+            if (data.intensity) fitness.intensity = data.intensity;
 
             return fitness.save();
         });

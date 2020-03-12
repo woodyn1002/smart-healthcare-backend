@@ -45,6 +45,7 @@ router.post('/:username/fitness/:date',
         burntCalories: Joi.number().positive().required(),
         count: Joi.number().positive().required(),
         elapsedTime: Joi.number().positive().required(),
+        intensity: Joi.number().min(0).max(4)
     }),
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
@@ -63,6 +64,7 @@ router.put('/:username/fitness/:date',
         burntCalories: Joi.number().positive().required(),
         count: Joi.number().positive().required(),
         elapsedTime: Joi.number().positive().required(),
+        intensity: Joi.number().min(0).max(4)
     }),
     (req, res) => {
         const {username, date} = req.params;

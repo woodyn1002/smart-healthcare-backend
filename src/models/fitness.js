@@ -8,7 +8,8 @@ const fitnessSchema = new Schema({
     exerciseId: {type: String, required: true},
     burntCalories: {type: Number, required: true},
     count: {type: Number, required: true},
-    elapsedTime: {type: Number, required: true}
+    elapsedTime: {type: Number, required: true},
+    intensity: {type: Number, min: 0, max: 4}
 }, {
     toJSON: {
         transform: function (doc, ret) {
