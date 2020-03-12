@@ -7,7 +7,7 @@ import {MealExistError, MealNotFoundError} from "../../../errors";
 const router = express.Router();
 
 const dishSchema = Joi.object().keys({
-    foodName: Joi.string().required(),
+    foodId: Joi.string().required(),
     amount: Joi.number().positive()
 });
 
