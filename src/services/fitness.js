@@ -30,7 +30,7 @@ export function createFitness(username, date, data) {
             return Fitness.create({
                 username,
                 date,
-                exerciseName: data.exerciseName,
+                exerciseId: data.exerciseId,
                 burntCalories: data.burntCalories,
                 count: data.count,
                 elapsedTime: data.elapsedTime
@@ -43,7 +43,7 @@ export function updateFitness(username, date, data) {
         .then(fitness => {
             if (!fitness) throw new FitnessNotFoundError(username, date);
 
-            if (data.exerciseName) fitness.exerciseName = data.exerciseName;
+            if (data.exerciseId) fitness.exerciseId = data.exerciseId;
             if (data.burntCalories) fitness.burntCalories = data.burntCalories;
             if (data.count) fitness.count = data.count;
             if (data.elapsedTime) fitness.elapsedTime = data.elapsedTime;
