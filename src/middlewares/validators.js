@@ -1,5 +1,6 @@
 import Joi from "joi";
 import lodash from "lodash";
+import {JsonWebTokenError, NotBeforeError, TokenExpiredError} from "jsonwebtoken";
 import * as AuthService from "../services/auth";
 
 const loggedIn = (req, res, next) => {
@@ -13,8 +14,14 @@ const loggedIn = (req, res, next) => {
             next();
         })
         .catch(err => {
-            console.error(err);
-            res.status(500).end();
+            if (err instanceof TokenExpiredError ||
+                err instanceof JsonWebTokenError ||
+                err instanceof NotBeforeError) {
+                res.status(401).json({error: err.name, message: err.message});
+            } else {
+                console.error(err);
+                res.status(500).end();
+            }
         });
 };
 
