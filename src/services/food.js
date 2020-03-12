@@ -5,10 +5,10 @@ export function getFoods() {
     return Food.find();
 }
 
-export function getFood(name) {
-    return Food.findOne({name})
+export function getFood(id) {
+    return Food.findOne({id})
         .then(food => {
-            if (!food) throw new FoodNotFoundError(name);
+            if (!food) throw new FoodNotFoundError(id);
             return food;
         });
 }
