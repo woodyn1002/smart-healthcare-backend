@@ -13,20 +13,21 @@ export function getExercise(id) {
         });
 }
 
-export function createExercise(id, met) {
+export function createExercise(id, name, met) {
     return Exercise.findOne({id})
         .then(exercise => {
             if (exercise) throw new ExerciseExistError(id);
-            return Exercise.create({id, met});
+            return Exercise.create({id, name, met});
         });
 }
 
-export function updateExercise(id, met) {
+export function updateExercise(id, name, met) {
     return Exercise.findOne({id})
         .then(exercise => {
             if (!exercise) throw new ExerciseNotFoundError(id);
 
-            exercise.met = met;
+            if (name) exercise.name = name;
+            if (met) exercise.met = met;
             return exercise.save();
         });
 }

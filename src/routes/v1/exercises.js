@@ -37,12 +37,13 @@ router.post('/',
     validators.loggedIn, validators.isAdmin,
     validators.body({
         id: Joi.string().required(),
+        name: Joi.string().required(),
         met: Joi.number().positive().required()
     }),
     (req, res) => {
-        const {id, met} = req.body;
+        const {id, name, met} = req.body;
 
-        ExerciseService.createExercise(id, met)
+        ExerciseService.createExercise(id, name, met)
             .then(exercise => res.status(201).json(exercise))
             .catch(err => respondError(res, err));
     });
@@ -50,13 +51,14 @@ router.post('/',
 router.put('/:exerciseId',
     validators.loggedIn, validators.isAdmin,
     validators.body({
-        met: Joi.number().positive().required()
+        name: Joi.string(),
+        met: Joi.number().positive()
     }),
     (req, res) => {
         const id = req.params.exerciseId;
-        const met = req.body.met;
+        const {name, met} = req.body;
 
-        ExerciseService.updateExercise(id, met)
+        ExerciseService.updateExercise(id, name, met)
             .then(exercise => res.json(exercise))
             .catch(err => respondError(res, err));
     });
