@@ -13,27 +13,27 @@ export function getFood(name) {
         });
 }
 
-export function createFood(name, calories) {
-    return Food.findOne({name})
+export function createFood(id, calories) {
+    return Food.findOne({id})
         .then(food => {
-            if (food) throw new FoodExistError(name);
-            return Food.create({name, calories});
+            if (food) throw new FoodExistError(id);
+            return Food.create({id, calories});
         });
 }
 
-export function updateFood(name, calories) {
-    return Food.findOne({name})
+export function updateFood(id, calories) {
+    return Food.findOne({id})
         .then(food => {
-            if (!food) throw new FoodNotFoundError(name);
+            if (!food) throw new FoodNotFoundError(id);
 
             food.calories = calories;
             return food.save();
         });
 }
 
-export function deleteFood(name) {
-    return Food.findOneAndDelete({name})
+export function deleteFood(id) {
+    return Food.findOneAndDelete({id})
         .then(food => {
-            if (!food) throw new FoodNotFoundError(name);
+            if (!food) throw new FoodNotFoundError(id);
         });
 }

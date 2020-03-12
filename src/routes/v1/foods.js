@@ -24,11 +24,11 @@ router.get('/',
             .catch(err => respondError(res, err));
     });
 
-router.get('/:name',
+router.get('/:foodId',
     (req, res) => {
-        const name = req.params.name;
+        const id = req.params.foodId;
 
-        FoodService.getFood(name)
+        FoodService.getFood(id)
             .then(food => res.json(food))
             .catch(err => respondError(res, err));
     });
@@ -36,37 +36,37 @@ router.get('/:name',
 router.post('/',
     validators.loggedIn, validators.isAdmin,
     validators.body({
-        name: Joi.string().required(),
+        id: Joi.string().required(),
         calories: Joi.number().positive().required()
     }),
     (req, res) => {
-        const {name, calories} = req.body;
+        const {id, calories} = req.body;
 
-        FoodService.createFood(name, calories)
+        FoodService.createFood(id, calories)
             .then(food => res.status(201).json(food))
             .catch(err => respondError(res, err));
     });
 
-router.put('/:name',
+router.put('/:foodId',
     validators.loggedIn, validators.isAdmin,
     validators.body({
         calories: Joi.number().positive().required()
     }),
     (req, res) => {
-        const name = req.params.name;
+        const id = req.params.foodId;
         const calories = req.body.calories;
 
-        FoodService.updateFood(name, calories)
+        FoodService.updateFood(id, calories)
             .then(food => res.json(food))
             .catch(err => respondError(res, err));
     });
 
-router.delete('/:name',
+router.delete('/:foodId',
     validators.loggedIn, validators.isAdmin,
     (req, res) => {
-        const name = req.params.name;
+        const id = req.params.foodId;
 
-        FoodService.deleteFood(name)
+        FoodService.deleteFood(id)
             .then(() => res.status(204).end())
             .catch(err => respondError(res, err));
     });
