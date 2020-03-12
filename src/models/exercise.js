@@ -3,9 +3,10 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const exerciseSchema = new Schema({
-    name: {type: String, index: true, unique: true, required: true},
+    id: {type: String, index: true, unique: true, required: true},
     met: {type: Number, required: true}
 }, {
+    id: false,
     toJSON: {
         transform: function (doc, ret) {
             delete ret._id;

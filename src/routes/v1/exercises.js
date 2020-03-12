@@ -24,11 +24,11 @@ router.get('/',
             .catch(err => respondError(res, err));
     });
 
-router.get('/:name',
+router.get('/:exerciseId',
     (req, res) => {
-        const name = req.params.name;
+        const id = req.params.exerciseId;
 
-        ExerciseService.getExercise(name)
+        ExerciseService.getExercise(id)
             .then(exercise => res.json(exercise))
             .catch(err => respondError(res, err));
     });
@@ -36,37 +36,37 @@ router.get('/:name',
 router.post('/',
     validators.loggedIn, validators.isAdmin,
     validators.body({
-        name: Joi.string().required(),
+        id: Joi.string().required(),
         met: Joi.number().positive().required()
     }),
     (req, res) => {
-        const {name, met} = req.body;
+        const {id, met} = req.body;
 
-        ExerciseService.createExercise(name, met)
+        ExerciseService.createExercise(id, met)
             .then(exercise => res.status(201).json(exercise))
             .catch(err => respondError(res, err));
     });
 
-router.put('/:name',
+router.put('/:exerciseId',
     validators.loggedIn, validators.isAdmin,
     validators.body({
         met: Joi.number().positive().required()
     }),
     (req, res) => {
-        const name = req.params.name;
+        const id = req.params.exerciseId;
         const met = req.body.met;
 
-        ExerciseService.updateExercise(name, met)
+        ExerciseService.updateExercise(id, met)
             .then(exercise => res.json(exercise))
             .catch(err => respondError(res, err));
     });
 
-router.delete('/:name',
+router.delete('/:exerciseId',
     validators.loggedIn, validators.isAdmin,
     (req, res) => {
-        const name = req.params.name;
+        const id = req.params.exerciseId;
 
-        ExerciseService.deleteExercise(name)
+        ExerciseService.deleteExercise(id)
             .then(() => res.status(204).end())
             .catch(err => respondError(res, err));
     });

@@ -5,36 +5,36 @@ export function getExercises() {
     return Exercise.find();
 }
 
-export function getExercise(name) {
-    return Exercise.findOne({name})
+export function getExercise(id) {
+    return Exercise.findOne({id})
         .then(exercise => {
-            if (!exercise) throw new ExerciseNotFoundError(name);
+            if (!exercise) throw new ExerciseNotFoundError(id);
             return exercise;
         });
 }
 
-export function createExercise(name, met) {
-    return Exercise.findOne({name})
+export function createExercise(id, met) {
+    return Exercise.findOne({id})
         .then(exercise => {
-            if (exercise) throw new ExerciseExistError(name);
-            return Exercise.create({name, met});
+            if (exercise) throw new ExerciseExistError(id);
+            return Exercise.create({id, met});
         });
 }
 
-export function updateExercise(name, met) {
-    return Exercise.findOne({name})
+export function updateExercise(id, met) {
+    return Exercise.findOne({id})
         .then(exercise => {
-            if (!exercise) throw new ExerciseNotFoundError(name);
+            if (!exercise) throw new ExerciseNotFoundError(id);
 
             exercise.met = met;
             return exercise.save();
         });
 }
 
-export function deleteExercise(name) {
-    return Exercise.findOneAndDelete({name})
+export function deleteExercise(id) {
+    return Exercise.findOneAndDelete({id})
         .then(exercise => {
-            if (!exercise) throw new ExerciseNotFoundError(name);
+            if (!exercise) throw new ExerciseNotFoundError(id);
             return exercise;
         });
 }
