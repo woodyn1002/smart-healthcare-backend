@@ -28,13 +28,21 @@ router.get('/:username/meals',
         username: Joi.string().required()
     }),
     validators.query({
-        date: Joi.string().isoDate()
+        date: Joi.string().isoDate(),
+        options: {
+            date: Joi.string(),
+            fromDate: Joi.string().isoDate(),
+            toDate: Joi.string().isoDate(),
+            limit: Joi.number().positive(),
+            sortByDates: Joi.boolean(),
+            sortByDatesDesc: Joi.boolean()
+        }
     }),
     (req, res) => {
         const username = req.params.username;
-        const date = req.query.date;
+        const options = req.query;
 
-        MealService.getMeals(username, date)
+        MealService.searchMeals(username, options)
             .then(meals => res.json(meals))
             .catch(err => respondError(res, err));
     });
