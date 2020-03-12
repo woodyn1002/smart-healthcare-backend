@@ -19,12 +19,13 @@ router.post('/register',
     validators.body({
         username: Joi.string().trim().alphanum().min(6).max(16).required(),
         password: Joi.string().trim().min(6).max(20).required(),
-        email: Joi.string().trim().email()
+        email: Joi.string().trim().email(),
+        fullName: Joi.string().email(),
     }),
     (req, res) => {
-        const {username, password, email} = req.body;
+        const {username, password, email, fullName} = req.body;
 
-        AuthService.register(username, password, email)
+        AuthService.register(username, password, email, fullName)
             .then((user) => res.status(201).json(user))
             .catch(err => respondError(res, err));
     });

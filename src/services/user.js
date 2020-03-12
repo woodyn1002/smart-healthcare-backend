@@ -21,12 +21,12 @@ export function getUser(username) {
         });
 }
 
-export function createUser(username, password, email, isAdmin) {
+export function createUser(username, password, email, fullName, isAdmin) {
     return User.findByUsername(username)
         .then(user => {
             if (user) throw new UsernameExistError(username);
 
-            return User.create({username, password, email, isAdmin});
+            return User.create({username, password, email, fullName, isAdmin});
         });
 }
 
