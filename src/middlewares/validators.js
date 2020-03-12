@@ -45,22 +45,30 @@ const canManageUser = (req, res, next) => {
     }
 };
 
-const body = function (bodySchema) {
-    return (req, res, next) => {
-        const schema = Joi.object().keys(bodySchema);
-        const bodySchemaKeys = Object.keys(bodySchema);
-
-        let requestBodyObj = {};
-        for (let key of bodySchemaKeys) {
-            requestBodyObj[key] = lodash.get(req.body, key);
-        }
-
-        schema.validate(requestBodyObj, (err) => {
-            if (err) return res.status(400).json({error: err.name, message: err.details[0].message});
-            next();
-        });
-    }
+const query = function (schema) {
+    return (req, res, next) => validateProperties(req.query, res, next, schema);
+};
+const params = function (schema) {
+    return (req, res, next) => validateProperties(req.params, res, next, schema);
+};
+const body = function (schema) {
+    return (req, res, next) => validateProperties(req.body, res, next, schema);
 };
 
-const validators = {loggedIn, isAdmin, canManageUser, body};
+let validateProperties = function (requestProps, res, next, schema) {
+    const joiSchema = Joi.object().keys(schema);
+    const schemaKeys = Object.keys(schema);
+
+    let requestPropsObj = {};
+    for (let key of schemaKeys) {
+        requestPropsObj[key] = lodash.get(requestProps, key);
+    }
+
+    joiSchema.validate(requestPropsObj, (err) => {
+        if (err) return res.status(400).json({error: err.name, message: err.details[0].message});
+        next();
+    });
+};
+
+const validators = {loggedIn, isAdmin, canManageUser, query, params, body};
 export default validators;
