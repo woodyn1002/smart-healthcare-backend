@@ -46,17 +46,13 @@ export function updateHealthData(username, data) {
             if (data.bloodPressure) {
                 healthData.bloodPressure.min = data.bloodPressure.min;
                 healthData.bloodPressure.max = data.bloodPressure.max;
-                healthData.bloodPressure.medicine = data.bloodPressure.medicine;
             }
-            if (data.neutralFat) {
-                healthData.neutralFat.fatigue = data.neutralFat.fatigue;
-                healthData.neutralFat.medicine = data.neutralFat.medicine;
-            }
+            if (data.bloodPressureMedicine) healthData.bloodPressureMedicine = data.bloodPressureMedicine;
+            if (data.neutralFat) healthData.neutralFat = data.neutralFat;
+            if (data.neutralFatMedicine) healthData.neutralFatMedicine = data.neutralFatMedicine;
             if (data.hdlCholesterol) healthData.hdlCholesterol = data.hdlCholesterol;
-            if (data.fastingBloodSugar) {
-                healthData.fastingBloodSugar.fatigue = data.fastingBloodSugar.fatigue;
-                healthData.fastingBloodSugar.medicine = data.fastingBloodSugar.medicine;
-            }
+            if (data.fastingBloodSugar) healthData.fastingBloodSugar = data.fastingBloodSugar;
+            if (data.fastingBloodSugarMedicine) healthData.fastingBloodSugarMedicine = data.fastingBloodSugarMedicine;
 
             return healthData.save();
         });

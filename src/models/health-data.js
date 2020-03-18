@@ -15,18 +15,14 @@ const healthDataSchema = new Schema({
     waist: Number,
     bloodPressure: {
         min: Number,
-        max: Number,
-        medicine: Boolean
+        max: Number
     },
-    neutralFat: {
-        fatigue: Number,
-        medicine: Boolean
-    },
+    bloodPressureMedicine: Boolean,
+    neutralFat: Number,
+    neutralFatMedicine: Boolean,
     hdlCholesterol: Number,
-    fastingBloodSugar: {
-        fatigue: Number,
-        medicine: Boolean
-    }
+    fastingBloodSugar: Number,
+    fastingBloodSugarMedicine: Boolean
 }, {
     toJSON: {
         transform: function (doc, ret) {

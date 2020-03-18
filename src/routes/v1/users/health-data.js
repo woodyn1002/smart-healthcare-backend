@@ -18,18 +18,14 @@ const healthDataBodyValidator = validators.body({
     waist: Joi.number().positive(),
     bloodPressure: {
         min: Joi.number().positive(),
-        max: Joi.number().positive().min(Joi.ref('min')),
-        medicine: Joi.boolean()
+        max: Joi.number().positive().min(Joi.ref('min'))
     },
-    neutralFat: {
-        fatigue: Joi.number().positive(),
-        medicine: Joi.boolean()
-    },
+    bloodPressureMedicine: Joi.boolean(),
+    neutralFat: Joi.number().positive(),
+    neutralFatMedicine: Joi.boolean(),
     hdlCholesterol: Joi.number().positive(),
-    fastingBloodSugar: {
-        fatigue: Joi.number().positive(),
-        medicine: Joi.boolean()
-    }
+    fastingBloodSugar: Joi.number().positive(),
+    fastingBloodSugarMedicine: Joi.boolean()
 });
 
 const respondError = (res, err) => {
