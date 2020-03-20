@@ -17,7 +17,7 @@ const loggedIn = (req, res, next) => {
             if (err instanceof TokenExpiredError ||
                 err instanceof JsonWebTokenError ||
                 err instanceof NotBeforeError) {
-                res.status(401).json({error: err.name, message: err.message});
+                res.status(401).json({error: {name: err.name, message: err.message}});
             } else {
                 console.error(err);
                 res.status(500).end();
@@ -65,7 +65,7 @@ let validateProperties = function (requestProps, res, next, schema) {
     }
 
     joiSchema.validate(requestPropsObj, (err) => {
-        if (err) return res.status(400).json({error: err.name, message: err.details[0].message});
+        if (err) return res.status(400).json({error: {name: err.name, message: err.details[0].message}});
         next();
     });
 };

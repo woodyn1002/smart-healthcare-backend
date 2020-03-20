@@ -8,9 +8,9 @@ const router = express.Router();
 
 const respondError = (res, err) => {
     if (err instanceof FitnessExistError) {
-        res.status(403).json({error: err.name, message: err.message});
+        res.status(403).json({error: {name: err.name, message: err.message}});
     } else if (err instanceof FitnessNotFoundError) {
-        res.status(404).json({error: err.name, message: err.message});
+        res.status(404).json({error: {name: err.name, message: err.message}});
     } else {
         console.error(err);
         res.status(500).end();
