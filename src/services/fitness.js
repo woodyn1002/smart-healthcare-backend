@@ -1,6 +1,7 @@
 import Fitness from "../models/fitness";
 import moment from "moment";
-import {FitnessExistError, FitnessNotFoundError} from "../errors";
+import * as ExerciseService from "./exercise";
+import {ExerciseNotFoundError, FitnessExistError, FitnessNotFoundError} from "../errors";
 
 export function searchFitness(username, options) {
     let conditions = {username};
@@ -35,8 +36,11 @@ export function getFitness(username, date) {
 
 export function createFitness(username, date, data) {
     return Fitness.findOne({username, date})
-        .then(fitness => {
+        .then(async fitness => {
             if (fitness) throw new FitnessExistError(username, date);
+
+            let exercise = await ExerciseService.getExercise(data.exerciseId);
+            if (!exercise) throw new ExerciseNotFoundError(data.exerciseId);
 
             return Fitness.create({
                 username,
@@ -52,8 +56,11 @@ export function createFitness(username, date, data) {
 
 export function updateFitness(username, date, data) {
     return Fitness.findOne({username, date})
-        .then(fitness => {
+        .then(async fitness => {
             if (!fitness) throw new FitnessNotFoundError(username, date);
+
+            let exercise = await ExerciseService.getExercise(data.exerciseId);
+            if (!exercise) throw new ExerciseNotFoundError(data.exerciseId);
 
             if (data.exerciseId) fitness.exerciseId = data.exerciseId;
             if (data.burntCalories) fitness.burntCalories = data.burntCalories;

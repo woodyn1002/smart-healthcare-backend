@@ -2,14 +2,14 @@ import express from "express";
 import Joi from "joi";
 import validators from "../../../middlewares/validators";
 import * as FitnessService from "../../../services/fitness";
-import {FitnessExistError, FitnessNotFoundError} from "../../../errors";
+import {ExerciseNotFoundError, FitnessExistError, FitnessNotFoundError} from "../../../errors";
 
 const router = express.Router();
 
 const respondError = (res, err) => {
     if (err instanceof FitnessExistError) {
         res.status(403).json({error: {name: err.name, message: err.message}});
-    } else if (err instanceof FitnessNotFoundError) {
+    } else if (err instanceof FitnessNotFoundError || err instanceof ExerciseNotFoundError) {
         res.status(404).json({error: {name: err.name, message: err.message}});
     } else {
         console.error(err);
