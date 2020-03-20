@@ -1,6 +1,7 @@
 import Meal from "../models/meal";
 import moment from "moment";
-import {MealExistError, MealNotFoundError} from "../errors";
+import * as FoodService from "./food";
+import {FoodNotFoundError, MealExistError, MealNotFoundError} from "../errors";
 
 export function searchMeals(username, options) {
     let conditions = {username};
@@ -35,8 +36,15 @@ export function getMeal(username, date) {
 
 export function createMeal(username, date, data) {
     return Meal.findOne({username, date})
-        .then(meal => {
+        .then(async meal => {
             if (meal) throw new MealExistError(username, date);
+
+            let foods = await FoodService.getFoods();
+            for (let dish of data.dishes) {
+                let food = foods.find(food => food.id === dish.foodId);
+                if (!food) throw new FoodNotFoundError(dish.foodId);
+            }
+
             return Meal.create({
                 username,
                 date,
@@ -49,8 +57,16 @@ export function createMeal(username, date, data) {
 
 export function updateMeal(username, date, data) {
     return Meal.findOne({username, date})
-        .then(meal => {
+        .then(async meal => {
             if (!meal) throw new MealNotFoundError(username, date);
+
+            if (data.dishes) {
+                let foods = await FoodService.getFoods();
+                for (let dish of data.dishes) {
+                    let food = foods.find(food => food.id === dish.foodId);
+                    if (!food) throw new FoodNotFoundError(dish.foodId);
+                }
+            }
 
             if (data.location) meal.location = data.location;
             if (data.satisfactionScore) meal.satisfactionScore = data.satisfactionScore;

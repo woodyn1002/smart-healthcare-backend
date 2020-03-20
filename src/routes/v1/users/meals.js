@@ -2,7 +2,7 @@ import express from "express";
 import Joi from "joi";
 import * as MealService from "../../../services/meal";
 import validators from "../../../middlewares/validators";
-import {MealExistError, MealNotFoundError} from "../../../errors";
+import {FoodNotFoundError, MealExistError, MealNotFoundError} from "../../../errors";
 
 const router = express.Router();
 
@@ -14,7 +14,7 @@ const dishSchema = Joi.object().keys({
 const respondError = (res, err) => {
     if (err instanceof MealExistError) {
         res.status(403).json({error: {name: err.name, message: err.message}});
-    } else if (err instanceof MealNotFoundError) {
+    } else if (err instanceof MealNotFoundError || err instanceof FoodNotFoundError) {
         res.status(404).json({error: {name: err.name, message: err.message}});
     } else {
         console.error(err);
