@@ -1,11 +1,10 @@
-#!/usr/bin/env node
-
 /**
  * Module dependencies.
  */
 
-const app = require('../dist/app');
-const appConfig = require('../dist/config/app-config');
+import app from "./app";
+import appConfig from "./config/app-config";
+
 const debug = require('debug')('smart-healthcare-backend:server');
 const http = require('http');
 

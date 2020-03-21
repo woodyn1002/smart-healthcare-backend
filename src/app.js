@@ -1,5 +1,3 @@
-require('source-map-support').install();
-
 import express from "express";
 import cors from "cors";
 import path from "path";
@@ -21,4 +19,4 @@ app.set('mongodb', db);
 
 app.use('/', indexRouter);
 
-module.exports = app;
+export default app;
