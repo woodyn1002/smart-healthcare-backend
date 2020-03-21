@@ -70,7 +70,7 @@ router.post('/:username/meals/:date',
     validators.body({
         location: Joi.string(),
         satisfactionScore: Joi.number().min(0).max(4),
-        dishes: Joi.array().items(dishSchema)
+        dishes: Joi.array().items(dishSchema).required()
     }),
     (req, res) => {
         const {username, date} = req.params;
@@ -90,7 +90,7 @@ router.put('/:username/meals/:date',
     validators.body({
         location: Joi.string(),
         satisfactionScore: Joi.number().min(0).max(4),
-        dishes: Joi.array().items(dishSchema)
+        dishes: Joi.array().items(dishSchema).required()
     }),
     (req, res) => {
         const {username, date} = req.params;
