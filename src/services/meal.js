@@ -3,6 +3,35 @@ import moment from "moment";
 import * as FoodService from "./food";
 import {FoodNotFoundError, MealExistError, MealNotFoundError} from "../errors";
 
+function toResponseJson(doc) {
+    const populated = (doc, foods) => {
+        let meal = doc.toJSON();
+        meal.totalCalories = 0;
+
+        for (let dish of meal.dishes) {
+            let food = foods.find(food => food.id === dish.foodId);
+            if (food) {
+                dish.food = food;
+                meal.totalCalories += food.calories * dish.amount;
+            }
+        }
+        return meal;
+    };
+
+    return new Promise(async (resolve) => {
+        let foods = await FoodService.getFoods();
+
+        if (doc instanceof Array) {
+            let meals = [];
+            for (let element of doc)
+                meals.push(populated(element, foods));
+            return resolve(meals);
+        } else {
+            return resolve(populated(doc, foods));
+        }
+    });
+}
+
 export function searchMeals(username, options) {
     let conditions = {username};
 
@@ -23,7 +52,7 @@ export function searchMeals(username, options) {
     if (options.sortByDates) query = query.sort({date: 1});
     if (options.sortByDatesDesc) query = query.sort({date: -1});
 
-    return query;
+    return query.then(meals => toResponseJson(meals));
 }
 
 export function getMeal(username, date) {
@@ -31,7 +60,8 @@ export function getMeal(username, date) {
         .then(meal => {
             if (!meal) throw new MealNotFoundError(username, date);
             return meal;
-        });
+        })
+        .then(meal => toResponseJson(meal));
 }
 
 export function createMeal(username, date, data) {
@@ -52,7 +82,8 @@ export function createMeal(username, date, data) {
                 satisfactionScore: data.satisfactionScore,
                 dishes: data.dishes
             });
-        });
+        })
+        .then(meal => toResponseJson(meal));
 }
 
 export function updateMeal(username, date, data) {
@@ -73,7 +104,8 @@ export function updateMeal(username, date, data) {
             if (data.dishes) meal.dishes = data.dishes;
 
             return meal.save();
-        });
+        })
+        .then(async meal => toResponseJson(meal));
 }
 
 export function deleteMeal(username, date) {
