@@ -3,6 +3,27 @@ import moment from "moment";
 import * as ExerciseService from "./exercise";
 import {ExerciseNotFoundError, FitnessExistError, FitnessNotFoundError} from "../errors";
 
+function toResponseJson(doc) {
+    const populated = (doc, exercises) => {
+        let fitness = doc.toJSON();
+        fitness.exercise = exercises.find(exercise => exercise.id === fitness.exerciseId);
+        return fitness;
+    };
+
+    return new Promise(async (resolve) => {
+        let exercises = await ExerciseService.getExercises();
+
+        if (doc instanceof Array) {
+            let fitnessList = [];
+            for (let element of doc)
+                fitnessList.push(populated(element, exercises));
+            return resolve(fitnessList);
+        } else {
+            return resolve(populated(doc, exercises));
+        }
+    });
+}
+
 export function searchFitness(username, options) {
     let conditions = {username};
 
@@ -23,7 +44,7 @@ export function searchFitness(username, options) {
     if (options.sortByDates) query = query.sort({date: 1});
     if (options.sortByDatesDesc) query = query.sort({date: -1});
 
-    return query;
+    return query.then(fitnessList => toResponseJson(fitnessList));
 }
 
 export function getFitness(username, date) {
@@ -32,6 +53,7 @@ export function getFitness(username, date) {
             if (!fitness) throw new FitnessNotFoundError(username, date);
             return fitness;
         })
+        .then(fitnessList => toResponseJson(fitnessList));
 }
 
 export function createFitness(username, date, data) {
@@ -51,7 +73,8 @@ export function createFitness(username, date, data) {
                 elapsedTime: data.elapsedTime,
                 intensity: data.intensity
             });
-        });
+        })
+        .then(fitnessList => toResponseJson(fitnessList));
 }
 
 export function updateFitness(username, date, data) {
@@ -69,7 +92,8 @@ export function updateFitness(username, date, data) {
             if (data.intensity) fitness.intensity = data.intensity;
 
             return fitness.save();
-        });
+        })
+        .then(fitnessList => toResponseJson(fitnessList));
 }
 
 export function deleteFitness(username, date) {
