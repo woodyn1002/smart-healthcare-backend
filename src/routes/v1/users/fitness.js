@@ -37,6 +37,10 @@ router.get('/:username/fitness',
         const username = req.params.username;
         const options = req.query;
 
+        if (options.limit) options.limit = Number(options.limit);
+        if (options.sortByDates) options.sortByDates = Boolean(options.sortByDates);
+        if (options.sortByDatesDesc) options.sortByDatesDesc = Boolean(options.sortByDatesDesc);
+
         FitnessService.searchFitness(username, options)
             .then(fitnessList => res.json(fitnessList))
             .catch(err => respondError(res, err));

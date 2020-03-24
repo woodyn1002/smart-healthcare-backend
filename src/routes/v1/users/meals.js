@@ -42,6 +42,10 @@ router.get('/:username/meals',
         const username = req.params.username;
         const options = req.query;
 
+        if (options.limit) options.limit = Number(options.limit);
+        if (options.sortByDates) options.sortByDates = Boolean(options.sortByDates);
+        if (options.sortByDatesDesc) options.sortByDatesDesc = Boolean(options.sortByDatesDesc);
+
         MealService.searchMeals(username, options)
             .then(meals => res.json(meals))
             .catch(err => respondError(res, err));
