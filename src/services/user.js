@@ -40,7 +40,7 @@ export function updateUser(username, password, email, fullName, isAdmin) {
             if (fullName) user.fullName = fullName;
             if (isAdmin) user.isAdmin = isAdmin;
 
-            return User.create({username, password, email, fullName, isAdmin});
+            return user.save();
         });
 }
 
