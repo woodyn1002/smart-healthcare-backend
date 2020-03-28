@@ -58,10 +58,9 @@ router.put('/:username',
         const username = req.params.username;
         const {password, email, fullName, isAdmin} = req.body;
 
-        if (!password) return res.status(400).json({error: 'password required'});
+        if (!password) return res.status(400).json({error: {name: '', message: 'password required'}});
         if (isAdmin && !req.decodedToken.isAdmin) return res.status(403).json({
-            error: 'ForbiddenError',
-            message: 'No permission.'
+            error: {name: 'ForbiddenError', message: 'No permission.'}
         });
 
         UserService.updateUser(username, password, email, fullName, isAdmin)

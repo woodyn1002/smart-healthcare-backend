@@ -6,7 +6,7 @@ import * as AuthService from "../services/auth";
 const loggedIn = (req, res, next) => {
     const token = req.headers['x-access-token'] || req.query.token;
 
-    if (!token) return res.status(401).json({error: 'UnauthorizedError', message: 'Not logged in.'});
+    if (!token) return res.status(401).json({error: {name: 'UnauthorizedError', message: 'Not logged in.'}});
 
     AuthService.verify(token)
         .then((decoded) => {
@@ -31,7 +31,7 @@ const isAdmin = (req, res, next) => {
     if (isAdmin) {
         next();
     } else {
-        res.status(403).json({error: 'ForbiddenError', message: 'No permission.'});
+        res.status(403).json({error: {name: 'ForbiddenError', message: 'No permission.'}});
     }
 };
 
@@ -41,7 +41,7 @@ const canManageUser = (req, res, next) => {
     if (isAdmin || username === req.params.username) {
         next();
     } else {
-        res.status(403).json({error: 'ForbiddenError', message: 'No permission.'});
+        res.status(403).json({error: {name: 'ForbiddenError', message: 'No permission.'}});
     }
 };
 
