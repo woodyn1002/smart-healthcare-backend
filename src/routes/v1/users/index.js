@@ -51,7 +51,7 @@ router.put('/:username',
     validators.body({
         password: Joi.string().trim().min(6).max(20),
         email: Joi.string().trim().email(),
-        fullName: Joi.string().email(),
+        fullName: Joi.string(),
         isAdmin: Joi.boolean()
     }),
     (req, res) => {
