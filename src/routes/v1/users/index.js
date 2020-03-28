@@ -58,7 +58,7 @@ router.put('/:username',
         const username = req.params.username;
         const {password, email, fullName, isAdmin} = req.body;
 
-        if (isAdmin && !req.decodedToken.isAdmin) return res.status(403).json({
+        if (isAdmin !== undefined && !req.decodedToken.isAdmin) return res.status(403).json({
             error: {name: 'ForbiddenError', message: 'No permission.'}
         });
 
