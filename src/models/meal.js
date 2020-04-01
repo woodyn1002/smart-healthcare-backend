@@ -15,7 +15,7 @@ const dishSchema = new Schema({
 });
 
 const mealSchema = new Schema({
-    username: {type: String, index: true, required: true},
+    userId: {type: String, index: true, required: true},
     date: {type: Date, index: true, required: true},
     location: String,
     satisfactionScore: {type: Number, min: 0, max: 4},

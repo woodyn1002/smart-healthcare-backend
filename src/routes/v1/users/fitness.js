@@ -17,10 +17,10 @@ const respondError = (res, err) => {
     }
 };
 
-router.get('/:username/fitness',
+router.get('/:userId/fitness',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        username: Joi.string().required()
+        userId: Joi.string().required()
     }),
     validators.query({
         date: Joi.string().isoDate(),
@@ -34,36 +34,36 @@ router.get('/:username/fitness',
         }
     }),
     (req, res) => {
-        const username = req.params.username;
+        const userId = req.params.userId;
         const options = req.query;
 
         if (options.limit) options.limit = Number(options.limit);
         if (options.sortByDates) options.sortByDates = Boolean(options.sortByDates);
         if (options.sortByDatesDesc) options.sortByDatesDesc = Boolean(options.sortByDatesDesc);
 
-        FitnessService.searchFitness(username, options)
+        FitnessService.searchFitness(userId, options)
             .then(fitnessList => res.json(fitnessList))
             .catch(err => respondError(res, err));
     });
 
-router.get('/:username/fitness/:date',
+router.get('/:userId/fitness/:date',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        username: Joi.string().required(),
+        userId: Joi.string().required(),
         date: Joi.string().isoDate().required()
     }),
     (req, res) => {
-        const {username, date} = req.params;
+        const {userId, date} = req.params;
 
-        FitnessService.getFitness(username, date)
+        FitnessService.getFitness(userId, date)
             .then(fitness => res.json(fitness))
             .catch(err => respondError(res, err));
     });
 
-router.post('/:username/fitness/:date',
+router.post('/:userId/fitness/:date',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        username: Joi.string().required(),
+        userId: Joi.string().required(),
         date: Joi.string().isoDate().required()
     }),
     validators.body({
@@ -75,18 +75,18 @@ router.post('/:username/fitness/:date',
     }),
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
-        const {username, date} = req.params;
+        const {userId, date} = req.params;
         const data = req.body;
 
-        FitnessService.createFitness(username, date, data)
+        FitnessService.createFitness(userId, date, data)
             .then(fitness => res.status(201).json(fitness))
             .catch(err => respondError(res, err));
     });
 
-router.put('/:username/fitness/:date',
+router.put('/:userId/fitness/:date',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        username: Joi.string().required(),
+        userId: Joi.string().required(),
         date: Joi.string().isoDate().required()
     }),
     validators.body({
@@ -97,24 +97,24 @@ router.put('/:username/fitness/:date',
         intensity: Joi.number().min(0).max(4)
     }),
     (req, res) => {
-        const {username, date} = req.params;
+        const {userId, date} = req.params;
         const data = req.body;
 
-        FitnessService.updateFitness(username, date, data)
+        FitnessService.updateFitness(userId, date, data)
             .then(fitness => res.json(fitness))
             .catch(err => respondError(res, err));
     });
 
-router.delete('/:username/fitness/:date',
+router.delete('/:userId/fitness/:date',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        username: Joi.string().required(),
+        userId: Joi.string().required(),
         date: Joi.string().isoDate().required()
     }),
     (req, res) => {
-        const {username, date} = req.params;
+        const {userId, date} = req.params;
 
-        FitnessService.deleteFitness(username, date)
+        FitnessService.deleteFitness(userId, date)
             .then(() => res.status(204).end())
             .catch(err => respondError(res, err));
     });

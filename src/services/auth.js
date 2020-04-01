@@ -5,7 +5,7 @@ import {InvalidPasswordError} from "../errors";
 
 function publishToken(user) {
     return new Promise((resolve, reject) => {
-        const payload = {username: user.username, isAdmin: user.isAdmin};
+        const payload = {userId: user.id, isAdmin: user.isAdmin};
         const options = {expiresIn: '7d'};
 
         jwt.sign(payload, jwtConfig.secret, options, (err, token) => {
@@ -30,7 +30,7 @@ export function register(username, password, email, isAdmin) {
 }
 
 export function login(username, password) {
-    return UserService.getUser(username)
+    return UserService.getUserByName(username, null)
         .then(user => {
             if (!UserService.verifyPassword(user, password)) throw new InvalidPasswordError();
             return publishToken(user);

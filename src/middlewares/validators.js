@@ -36,9 +36,9 @@ const isAdmin = (req, res, next) => {
 };
 
 const canManageUser = (req, res, next) => {
-    const {username, isAdmin} = req.decodedToken;
+    const {userId, isAdmin} = req.decodedToken;
 
-    if (isAdmin || username === req.params.username) {
+    if (isAdmin || userId === req.params.userId) {
         next();
     } else {
         res.status(403).json({error: {name: 'ForbiddenError', message: 'No permission.'}});

@@ -22,10 +22,10 @@ const respondError = (res, err) => {
     }
 };
 
-router.get('/:username/meals',
+router.get('/:userId/meals',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        username: Joi.string().required()
+        userId: Joi.string().required()
     }),
     validators.query({
         date: Joi.string().isoDate(),
@@ -39,36 +39,36 @@ router.get('/:username/meals',
         }
     }),
     (req, res) => {
-        const username = req.params.username;
+        const userId = req.params.userId;
         const options = req.query;
 
         if (options.limit) options.limit = Number(options.limit);
         if (options.sortByDates) options.sortByDates = Boolean(options.sortByDates);
         if (options.sortByDatesDesc) options.sortByDatesDesc = Boolean(options.sortByDatesDesc);
 
-        MealService.searchMeals(username, options)
+        MealService.searchMeals(userId, options)
             .then(meals => res.json(meals))
             .catch(err => respondError(res, err));
     });
 
-router.get('/:username/meals/:date',
+router.get('/:userId/meals/:date',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        username: Joi.string().required(),
+        userId: Joi.string().required(),
         date: Joi.string().isoDate().required()
     }),
     (req, res) => {
-        const {username, date} = req.params;
+        const {userId, date} = req.params;
 
-        MealService.getMeal(username, date)
+        MealService.getMeal(userId, date)
             .then(meal => res.json(meal))
             .catch(err => respondError(res, err));
     });
 
-router.post('/:username/meals/:date',
+router.post('/:userId/meals/:date',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        username: Joi.string().required(),
+        userId: Joi.string().required(),
         date: Joi.string().isoDate().required()
     }),
     validators.body({
@@ -77,18 +77,18 @@ router.post('/:username/meals/:date',
         dishes: Joi.array().items(dishSchema).required()
     }),
     (req, res) => {
-        const {username, date} = req.params;
+        const {userId, date} = req.params;
         const data = req.body;
 
-        MealService.createMeal(username, date, data)
+        MealService.createMeal(userId, date, data)
             .then(meal => res.status(201).json(meal))
             .catch(err => respondError(res, err));
     });
 
-router.put('/:username/meals/:date',
+router.put('/:userId/meals/:date',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        username: Joi.string().required(),
+        userId: Joi.string().required(),
         date: Joi.string().isoDate().required()
     }),
     validators.body({
@@ -97,24 +97,24 @@ router.put('/:username/meals/:date',
         dishes: Joi.array().items(dishSchema).required()
     }),
     (req, res) => {
-        const {username, date} = req.params;
+        const {userId, date} = req.params;
         const data = req.body;
 
-        MealService.updateMeal(username, date, data)
+        MealService.updateMeal(userId, date, data)
             .then(meal => res.json(meal))
             .catch(err => respondError(res, err));
     });
 
-router.delete('/:username/meals/:date',
+router.delete('/:userId/meals/:date',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        username: Joi.string().required(),
+        userId: Joi.string().required(),
         date: Joi.string().isoDate().required()
     }),
     (req, res) => {
-        const {username, date} = req.params;
+        const {userId, date} = req.params;
 
-        MealService.deleteMeal(username, date)
+        MealService.deleteMeal(userId, date)
             .then(() => res.status(204).end())
             .catch(err => respondError(res, err));
     });

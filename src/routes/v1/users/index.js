@@ -43,10 +43,10 @@ router.get('/:username',
             .catch(err => respondError(res, err));
     });
 
-router.put('/:username',
+router.put('/:userId',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        username: Joi.string().required()
+        userId: Joi.string().required()
     }),
     validators.body({
         password: Joi.string().trim().min(6).max(20),
@@ -55,27 +55,27 @@ router.put('/:username',
         isAdmin: Joi.boolean()
     }),
     (req, res) => {
-        const username = req.params.username;
+        const userId = req.params.userId;
         const {password, email, fullName, isAdmin} = req.body;
 
         if (isAdmin !== undefined && !req.decodedToken.isAdmin) return res.status(403).json({
             error: {name: 'ForbiddenError', message: 'No permission.'}
         });
 
-        UserService.updateUser(username, password, email, fullName, isAdmin)
+        UserService.updateUser(userId, password, email, fullName, isAdmin)
             .then(user => res.json(user))
             .catch(err => respondError(res, err));
     });
 
-router.delete('/:username',
+router.delete('/:userId',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        username: Joi.string().required()
+        userId: Joi.string().required()
     }),
     (req, res) => {
-        const username = req.params.username;
+        const userId = req.params.userId;
 
-        UserService.deleteUser(username)
+        UserService.deleteUser(userId)
             .then(() => res.status(204).end())
             .catch(err => respondError(res, err));
     });

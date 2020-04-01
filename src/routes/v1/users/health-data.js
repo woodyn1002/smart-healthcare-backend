@@ -39,58 +39,58 @@ const respondError = (res, err) => {
     }
 };
 
-router.get('/:username/health-data',
+router.get('/:userId/health-data',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        username: Joi.string().required()
+        userId: Joi.string().required()
     }),
     (req, res) => {
-        const username = req.params.username;
+        const userId = req.params.userId;
 
-        HealthDataService.getHealthData(username)
+        HealthDataService.getHealthData(userId)
             .then(healthData => res.json(healthData))
             .catch(err => respondError(res, err));
     });
 
-router.post('/:username/health-data',
+router.post('/:userId/health-data',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        username: Joi.string().required()
+        userId: Joi.string().required()
     }),
     healthDataBodyValidator,
     (req, res) => {
-        const username = req.params.username;
+        const userId = req.params.userId;
         const data = req.body;
 
-        HealthDataService.createHealthData(username, data)
+        HealthDataService.createHealthData(userId, data)
             .then(healthData => res.status(201).json(healthData))
             .catch(err => respondError(res, err));
     });
 
-router.put('/:username/health-data',
+router.put('/:userId/health-data',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        username: Joi.string().required()
+        userId: Joi.string().required()
     }),
     healthDataBodyValidator,
     (req, res) => {
-        const username = req.params.username;
+        const userId = req.params.userId;
         const data = req.body;
 
-        HealthDataService.updateHealthData(username, data)
+        HealthDataService.updateHealthData(userId, data)
             .then(healthData => res.json(healthData))
             .catch(err => respondError(res, err));
     });
 
-router.delete('/:username/health-data',
+router.delete('/:userId/health-data',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        username: Joi.string().required()
+        userId: Joi.string().required()
     }),
     (req, res) => {
-        const username = req.params.username;
+        const userId = req.params.userId;
 
-        HealthDataService.deleteHealthData(username)
+        HealthDataService.deleteHealthData(userId)
             .then(() => res.status(204).end())
             .catch(err => respondError(res, err));
     });

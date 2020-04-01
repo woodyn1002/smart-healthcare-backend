@@ -32,8 +32,8 @@ function toResponseJson(doc) {
     });
 }
 
-export function searchMeals(username, options) {
-    let conditions = {username};
+export function searchMeals(userId, options) {
+    let conditions = {userId};
 
     if (options.date) {
         let fromDate = moment(options.date).set({hour: 0, minute: 0, second: 0, millisecond: 0});
@@ -55,19 +55,19 @@ export function searchMeals(username, options) {
     return query.then(meals => toResponseJson(meals));
 }
 
-export function getMeal(username, date) {
-    return Meal.findOne({username, date})
+export function getMeal(userId, date) {
+    return Meal.findOne({userId, date})
         .then(meal => {
-            if (!meal) throw new MealNotFoundError(username, date);
+            if (!meal) throw new MealNotFoundError(userId, date);
             return meal;
         })
         .then(meal => toResponseJson(meal));
 }
 
-export function createMeal(username, date, data) {
-    return Meal.findOne({username, date})
+export function createMeal(userId, date, data) {
+    return Meal.findOne({userId, date})
         .then(async meal => {
-            if (meal) throw new MealExistError(username, date);
+            if (meal) throw new MealExistError(userId, date);
 
             let foods = await FoodService.getFoods();
             for (let dish of data.dishes) {
@@ -76,7 +76,7 @@ export function createMeal(username, date, data) {
             }
 
             return Meal.create({
-                username,
+                userId,
                 date,
                 location: data.location,
                 satisfactionScore: data.satisfactionScore,
@@ -86,10 +86,10 @@ export function createMeal(username, date, data) {
         .then(meal => toResponseJson(meal));
 }
 
-export function updateMeal(username, date, data) {
-    return Meal.findOne({username, date})
+export function updateMeal(userId, date, data) {
+    return Meal.findOne({userId, date})
         .then(async meal => {
-            if (!meal) throw new MealNotFoundError(username, date);
+            if (!meal) throw new MealNotFoundError(userId, date);
 
             if (data.dishes) {
                 let foods = await FoodService.getFoods();
@@ -108,9 +108,9 @@ export function updateMeal(username, date, data) {
         .then(async meal => toResponseJson(meal));
 }
 
-export function deleteMeal(username, date) {
-    return Meal.findOneAndDelete({username, date})
+export function deleteMeal(userId, date) {
+    return Meal.findOneAndDelete({userId, date})
         .then(meal => {
-            if (!meal) throw new MealNotFoundError(username, date);
+            if (!meal) throw new MealNotFoundError(userId, date);
         });
 }

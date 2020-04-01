@@ -1,20 +1,20 @@
 import HealthData from "../models/health-data";
 import {HealthDataExistError, HealthDataNotFoundError} from "../errors";
 
-export function getHealthData(username) {
-    return HealthData.findOne({username})
+export function getHealthData(userId) {
+    return HealthData.findOne({userId})
         .then(healthData => {
-            if (!healthData) throw new HealthDataNotFoundError(username);
+            if (!healthData) throw new HealthDataNotFoundError(userId);
             return healthData;
         });
 }
 
-export function createHealthData(username, data) {
-    return HealthData.findOne({username})
+export function createHealthData(userId, data) {
+    return HealthData.findOne({userId})
         .then(healthData => {
-            if (healthData) throw new HealthDataExistError(username);
+            if (healthData) throw new HealthDataExistError(userId);
             return HealthData.create({
-                username,
+                userId,
                 sex: data.sex,
                 height: data.height,
                 weight: data.weight,
@@ -29,10 +29,10 @@ export function createHealthData(username, data) {
         });
 }
 
-export function updateHealthData(username, data) {
-    return HealthData.findOne({username})
+export function updateHealthData(userId, data) {
+    return HealthData.findOne({userId})
         .then(healthData => {
-            if (!healthData) throw new HealthDataNotFoundError(username);
+            if (!healthData) throw new HealthDataNotFoundError(userId);
 
             if (data.sex) healthData.sex = data.sex;
             if (data.height) healthData.height = data.height;
@@ -58,9 +58,9 @@ export function updateHealthData(username, data) {
         });
 }
 
-export function deleteHealthData(username) {
-    return HealthData.findOneAndDelete({username})
+export function deleteHealthData(userId) {
+    return HealthData.findOneAndDelete({userId})
         .then(healthData => {
-            if (!healthData) throw new HealthDataNotFoundError(username);
+            if (!healthData) throw new HealthDataNotFoundError(userId);
         });
 }

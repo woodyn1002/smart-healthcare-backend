@@ -24,8 +24,8 @@ function toResponseJson(doc) {
     });
 }
 
-export function searchFitness(username, options) {
-    let conditions = {username};
+export function searchFitness(userId, options) {
+    let conditions = {userId};
 
     if (options.date) {
         let fromDate = moment(options.date).set({hour: 0, minute: 0, second: 0, millisecond: 0});
@@ -47,25 +47,25 @@ export function searchFitness(username, options) {
     return query.then(fitnessList => toResponseJson(fitnessList));
 }
 
-export function getFitness(username, date) {
-    return Fitness.findOne({username, date})
+export function getFitness(userId, date) {
+    return Fitness.findOne({userId, date})
         .then(fitness => {
-            if (!fitness) throw new FitnessNotFoundError(username, date);
+            if (!fitness) throw new FitnessNotFoundError(userId, date);
             return fitness;
         })
         .then(fitnessList => toResponseJson(fitnessList));
 }
 
-export function createFitness(username, date, data) {
-    return Fitness.findOne({username, date})
+export function createFitness(userId, date, data) {
+    return Fitness.findOne({userId, date})
         .then(async fitness => {
-            if (fitness) throw new FitnessExistError(username, date);
+            if (fitness) throw new FitnessExistError(userId, date);
 
             let exercise = await ExerciseService.getExercise(data.exerciseId);
             if (!exercise) throw new ExerciseNotFoundError(data.exerciseId);
 
             return Fitness.create({
-                username,
+                userId,
                 date,
                 exerciseId: data.exerciseId,
                 burntCalories: data.burntCalories,
@@ -77,10 +77,10 @@ export function createFitness(username, date, data) {
         .then(fitnessList => toResponseJson(fitnessList));
 }
 
-export function updateFitness(username, date, data) {
-    return Fitness.findOne({username, date})
+export function updateFitness(userId, date, data) {
+    return Fitness.findOne({userId, date})
         .then(async fitness => {
-            if (!fitness) throw new FitnessNotFoundError(username, date);
+            if (!fitness) throw new FitnessNotFoundError(userId, date);
 
             let exercise = await ExerciseService.getExercise(data.exerciseId);
             if (!exercise) throw new ExerciseNotFoundError(data.exerciseId);
@@ -96,9 +96,9 @@ export function updateFitness(username, date, data) {
         .then(fitnessList => toResponseJson(fitnessList));
 }
 
-export function deleteFitness(username, date) {
-    return Fitness.findOneAndDelete({username, date})
+export function deleteFitness(userId, date) {
+    return Fitness.findOneAndDelete({userId, date})
         .then(fitness => {
-            if (!fitness) throw new FitnessNotFoundError(username, date);
+            if (!fitness) throw new FitnessNotFoundError(userId, date);
         });
 }

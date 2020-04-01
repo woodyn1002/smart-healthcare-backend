@@ -1,3 +1,4 @@
+import * as MUUID from "uuid-mongodb";
 import crypto from "crypto";
 import mongodbConfig from "../config/mongodb-config";
 import User from "../models/user";
@@ -13,8 +14,16 @@ export function getUsers() {
     return User.find();
 }
 
-export function getUser(username) {
-    return User.findByUsername(username)
+export function getUser(userId) {
+    return User.findByStringId(userId)
+        .then(user => {
+            if (!user) throw new UserNotFoundError(userId);
+            return user;
+        });
+}
+
+export function getUserByName(username, sns) {
+    return User.findOne({username, sns})
         .then(user => {
             if (!user) throw new UserNotFoundError(username);
             return user;
@@ -22,18 +31,18 @@ export function getUser(username) {
 }
 
 export function createUser(username, password, email, fullName, isAdmin) {
-    return User.findByUsername(username)
+    return User.findOne({username, sns: null})
         .then(user => {
             if (user) throw new UsernameExistError(username);
 
-            return User.create({username, password, email, fullName, isAdmin});
+            return User.create({username, sns: null, password, email, fullName, isAdmin});
         });
 }
 
-export function updateUser(username, password, email, fullName, isAdmin) {
-    return User.findByUsername(username)
+export function updateUser(userId, password, email, fullName, isAdmin) {
+    return User.findByStringId(userId)
         .then(user => {
-            if (!user) throw new UserNotFoundError(username);
+            if (!user) throw new UserNotFoundError(userId);
 
             if (password) user.password = encryptPassword(password);
             if (email) user.email = email;
@@ -44,10 +53,10 @@ export function updateUser(username, password, email, fullName, isAdmin) {
         });
 }
 
-export function deleteUser(username) {
-    return User.findOneAndDelete({username})
+export function deleteUser(userId) {
+    return User.findOneAndDelete({userId: MUUID.from(userId)})
         .then(user => {
-            if (!user) throw new UserNotFoundError(username);
+            if (!user) throw new UserNotFoundError(userId);
         });
 }
 
