@@ -1,6 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const nodeExternals = require('webpack-node-externals');
+const DotenvFlow = require('dotenv-flow-webpack');
 require("babel-polyfill");
 
 module.exports = {
@@ -29,7 +30,8 @@ module.exports = {
     },
     plugins: [
         new webpack.IgnorePlugin(/\.(css|less)$/),
-        new webpack.BannerPlugin({banner: 'require("source-map-support").install();', raw: true, entryOnly: false})
+        new webpack.BannerPlugin({banner: 'require("source-map-support").install();', raw: true, entryOnly: false}),
+        new DotenvFlow()
     ],
     devtool: 'source-map',
     mode: 'development'
