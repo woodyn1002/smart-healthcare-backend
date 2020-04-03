@@ -1,16 +1,29 @@
 require('dotenv-flow').config();
 
 import {app, startApp} from "./app";
+import fs from "fs";
 import http from "http";
+import https from "https";
 
 const port = normalizePort(process.env.PORT);
+const useHttps = process.env.HTTPS.toLowerCase() === 'true';
 let server;
 
 startApp()
     .then(() => {
         app.set('port', port);
 
-        server = http.createServer(app);
+        if (useHttps) {
+            let options = {
+                key: fs.readFileSync('./keys/key.pem'),
+                cert: fs.readFileSync('./keys/cert.pem')
+            };
+            server = https.createServer(options, app);
+            console.log('Created https server');
+        } else {
+            server = http.createServer(app);
+            console.log('Created http server');
+        }
 
         server.listen(port);
         server.on('error', onError);
