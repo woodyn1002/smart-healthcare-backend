@@ -38,6 +38,15 @@ export function createUser(username, password, email, fullName, isAdmin) {
         });
 }
 
+export function createUserWithSns(username, sns, email, fullName, isAdmin) {
+    return User.findOne({username, sns})
+        .then(user => {
+            if (user) throw new UsernameExistError(username);
+
+            return User.create({username, sns, email, fullName, isAdmin});
+        });
+}
+
 export function updateUser(userId, password, email, fullName, isAdmin) {
     return User.findByStringId(userId)
         .then(user => {
