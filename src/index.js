@@ -1,34 +1,31 @@
-/**
- * Module dependencies.
- */
-
 require('dotenv-flow').config();
 
-import app from "./app";
-
-const debug = require('debug')('smart-healthcare-backend:server');
-const http = require('http');
-
-/**
- * Get port from environment and store in Express.
- */
+import {app, startApp} from "./app";
+import http from "http";
 
 const port = normalizePort(process.env.PORT);
-app.set('port', port);
+let server;
 
-/**
- * Create HTTP server.
- */
+startApp()
+    .then(() => {
+        app.set('port', port);
 
-const server = http.createServer(app);
+        server = http.createServer(app);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+        server.listen(port);
+        server.on('error', onError);
+        server.on('listening', () => {
+            const addr = server.address();
+            const bind = typeof addr === 'string'
+                ? 'pipe ' + addr
+                : 'port ' + addr.port;
+            console.log('Listening on ' + bind);
+        });
+    })
+    .catch(err => {
+        console.error(err);
+        process.exit(1);
+    });
 
 /**
  * Normalize a port into a number, string, or false.
@@ -37,16 +34,8 @@ server.on('listening', onListening);
 function normalizePort(val) {
     const port = parseInt(val, 10);
 
-    if (isNaN(port)) {
-        // named pipe
-        return val;
-    }
-
-    if (port >= 0) {
-        // port number
-        return port;
-    }
-
+    if (isNaN(port)) return val; // named pipe
+    if (port >= 0) return port; // port number
     return false;
 }
 
@@ -76,16 +65,4 @@ function onError(error) {
         default:
             throw error;
     }
-}
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-
-function onListening() {
-    const addr = server.address();
-    const bind = typeof addr === 'string'
-        ? 'pipe ' + addr
-        : 'port ' + addr.port;
-    debug('Listening on ' + bind);
 }
