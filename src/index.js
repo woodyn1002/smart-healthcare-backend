@@ -2,8 +2,9 @@
  * Module dependencies.
  */
 
+require('dotenv-flow').config();
+
 import app from "./app";
-import appConfig from "./config/app-config";
 
 const debug = require('debug')('smart-healthcare-backend:server');
 const http = require('http');
@@ -12,7 +13,7 @@ const http = require('http');
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || appConfig.port);
+const port = normalizePort(process.env.PORT);
 app.set('port', port);
 
 /**

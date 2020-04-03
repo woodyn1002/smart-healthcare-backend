@@ -1,14 +1,15 @@
 import jwt from "jsonwebtoken";
-import jwtConfig from "../config/jwt-config";
 import * as UserService from "../services/user";
 import {InvalidPasswordError} from "../errors";
+
+const jwtSecret = process.env.APP_JWT_SECRET;
 
 function publishToken(user) {
     return new Promise((resolve, reject) => {
         const payload = {userId: user.id, isAdmin: user.isAdmin};
         const options = {expiresIn: '7d'};
 
-        jwt.sign(payload, jwtConfig.secret, options, (err, token) => {
+        jwt.sign(payload, jwtSecret, options, (err, token) => {
             if (err) reject(err);
             resolve({user, token});
         });
@@ -17,7 +18,7 @@ function publishToken(user) {
 
 export function verify(token) {
     return new Promise((resolve, reject) => {
-        jwt.verify(token, jwtConfig.secret, (err, decoded) => {
+        jwt.verify(token, jwtSecret, (err, decoded) => {
             if (err) reject(err);
             resolve(decoded);
         });

@@ -1,8 +1,0 @@
-{
-  "host": "localhost",
-  "port": "27017",
-  "user": "example",
-  "password": "example",
-  "database": "example",
-  "pwdSecret": "example"
-}

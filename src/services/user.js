@@ -1,11 +1,10 @@
 import * as MUUID from "uuid-mongodb";
 import crypto from "crypto";
-import mongodbConfig from "../config/mongodb-config";
 import User from "../models/user";
 import {UsernameExistError, UserNotFoundError} from "../errors";
 
 export function encryptPassword(password) {
-    return crypto.createHmac('sha1', mongodbConfig.pwdSecret)
+    return crypto.createHmac('sha1', process.env.APP_PWD_SECRET)
         .update(password)
         .digest('base64');
 }
