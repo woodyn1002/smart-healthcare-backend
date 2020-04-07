@@ -8,14 +8,9 @@ db.once('open', function () {
 });
 
 export function connect() {
-    const config = {
-        host: process.env.APP_MONGO_HOST,
-        port: process.env.APP_MONGO_PORT,
-        user: process.env.APP_MONGO_USER,
-        password: process.env.APP_MONGO_PWD,
-        database: process.env.APP_MONGO_DB
-    };
-    return mongoose.connect(
-        `mongodb://${config.user}:${config.password}@${config.host}:${config.port}/${config.database}`,
-        {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true});
+    return mongoose.connect(process.env.APP_MONGO_URL, {
+        useUnifiedTopology: true,
+        useNewUrlParser: true,
+        useCreateIndex: true
+    });
 }
