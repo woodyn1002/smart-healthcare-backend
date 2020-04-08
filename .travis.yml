@@ -1,0 +1,37 @@
+language: node_js
+node_js:
+  - "node"
+
+branches:
+  only:
+    - master
+
+before_deploy:
+  - rm -rf node_modules
+  - zip -r smart-healthcare-backend *
+  - mkdir -p deploy
+  - mv smart-healthcare-backend.zip deploy/smart-healthcare-backend.zip
+
+deploy:
+  - provider: s3
+    access_key_id: "$AWS_ACCESS_KEY_ID"
+    secret_access_key: "$AWS_SECRET_ACCESS_KEY"
+    bucket: smart-healthcare-backend
+    region: ap-northeast-2
+    skip_cleanup: true
+    local_dir: deploy
+    wait-until-deployed: true
+    on:
+      branch: master
+  - provider: codedeploy
+    access_key_id: "$AWS_ACCESS_KEY_ID"
+    secret_access_key: "$AWS_SECRET_ACCESS_KEY"
+    bucket: smart-healthcare-backend
+    key: smart-healthcare-backend.zip
+    bundle_type: zip
+    application: smart-healthcare-backend-deploy
+    deployment_group: ci-cd-deploy-group
+    region: ap-northeast-2
+    wait-until-deployed: true
+    on:
+      branch: master
