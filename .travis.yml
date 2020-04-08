@@ -8,7 +8,7 @@ branches:
 
 before_deploy:
   - rm -rf node_modules
-  - zip -r smart-healthcare-backend *
+  - zip -r smart-healthcare-backend .
   - mkdir -p deploy
   - mv smart-healthcare-backend.zip deploy/smart-healthcare-backend.zip
 
