@@ -34,8 +34,4 @@ userSchema.virtual('id')
         this._id = MUUID.from(val);
     });
 
-userSchema.statics.findByStringId = function (userId) {
-    return this.findOne({userId: MUUID.from(userId)});
-};
-
 export default mongoose.model('User', userSchema, 'users');

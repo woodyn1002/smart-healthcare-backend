@@ -14,7 +14,7 @@ export function getUsers() {
 }
 
 export function getUser(userId) {
-    return User.findByStringId(userId)
+    return User.findOne({_id: MUUID.from(userId)})
         .then(user => {
             if (!user) throw new UserNotFoundError(userId);
             return user;
@@ -48,7 +48,7 @@ export function createUserWithSns(username, sns, email, fullName, isAdmin) {
 }
 
 export function updateUser(userId, password, email, fullName, isAdmin) {
-    return User.findByStringId(userId)
+    return User.findOne({_id: MUUID.from(userId)})
         .then(user => {
             if (!user) throw new UserNotFoundError(userId);
 
@@ -62,7 +62,7 @@ export function updateUser(userId, password, email, fullName, isAdmin) {
 }
 
 export function deleteUser(userId) {
-    return User.findOneAndDelete({userId: MUUID.from(userId)})
+    return User.findOneAndDelete({_id: MUUID.from(userId)})
         .then(user => {
             if (!user) throw new UserNotFoundError(userId);
         });
