@@ -12,8 +12,13 @@ export function searchHealthData(userId, options) {
     }
     if (options.fromDate) {
         options.fromDate = moment(options.fromDate);
+        if (!conditions.date) conditions.date = {};
+        conditions.date.$gte = options.fromDate;
+    }
+    if (options.toDate) {
         options.toDate = moment(options.toDate);
-        conditions.date = {$gte: options.fromDate, $lt: options.toDate};
+        if (!conditions.date) conditions.date = {};
+        conditions.date.$lt = options.toDate;
     }
 
     let query = HealthData.find(conditions);
