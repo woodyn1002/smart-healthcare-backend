@@ -33,8 +33,8 @@ export function searchFitness(userId, options) {
         conditions.date = {$gte: fromDate, $lt: toDate};
     }
     if (options.fromDate) {
-        options.fromDate = moment(options.fromDate).set({hour: 0, minute: 0, second: 0, millisecond: 0});
-        options.toDate = moment(options.fromDate).add(1, 'days');
+        options.fromDate = moment(options.fromDate);
+        options.toDate = moment(options.toDate);
         conditions.date = {$gte: options.fromDate, $lt: options.toDate};
     }
 
