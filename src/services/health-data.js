@@ -1,20 +1,45 @@
 import HealthData from "../models/health-data";
 import {HealthDataExistError, HealthDataNotFoundError} from "../errors";
+import moment from "moment";
 
-export function getHealthData(userId) {
-    return HealthData.findOne({userId})
+export function searchHealthData(userId, options) {
+    let conditions = {userId};
+
+    if (options.date) {
+        let fromDate = moment(options.date).set({hour: 0, minute: 0, second: 0, millisecond: 0});
+        let toDate = moment(fromDate).add(1, 'days');
+        conditions.date = {$gte: fromDate, $lt: toDate};
+    }
+    if (options.fromDate) {
+        options.fromDate = moment(options.fromDate);
+        options.toDate = moment(options.toDate);
+        conditions.date = {$gte: options.fromDate, $lt: options.toDate};
+    }
+
+    let query = HealthData.find(conditions);
+
+    if (options.limit) query = query.limit(options.limit);
+    if (options.sortByDates) query = query.sort({date: 1});
+    if (options.sortByDatesDesc) query = query.sort({date: -1});
+
+    return query;
+}
+
+export function getHealthData(userId, date) {
+    return HealthData.findOne({userId, date})
         .then(healthData => {
             if (!healthData) throw new HealthDataNotFoundError(userId);
             return healthData;
         });
 }
 
-export function createHealthData(userId, data) {
-    return HealthData.findOne({userId})
+export function createHealthData(userId, date, data) {
+    return HealthData.findOne({userId, date})
         .then(healthData => {
-            if (healthData) throw new HealthDataExistError(userId);
+            if (healthData) throw new HealthDataExistError(userId, date);
             return HealthData.create({
                 userId,
+                date,
                 sex: data.sex,
                 height: data.height,
                 weight: data.weight,
@@ -29,10 +54,10 @@ export function createHealthData(userId, data) {
         });
 }
 
-export function updateHealthData(userId, data) {
-    return HealthData.findOne({userId})
+export function updateHealthData(userId, date, data) {
+    return HealthData.findOne({userId, date})
         .then(healthData => {
-            if (!healthData) throw new HealthDataNotFoundError(userId);
+            if (!healthData) throw new HealthDataNotFoundError(userId, date);
 
             if (data.sex) healthData.sex = data.sex;
             if (data.height) healthData.height = data.height;
@@ -58,9 +83,9 @@ export function updateHealthData(userId, data) {
         });
 }
 
-export function deleteHealthData(userId) {
-    return HealthData.findOneAndDelete({userId})
+export function deleteHealthData(userId, date) {
+    return HealthData.findOneAndDelete({userId, date})
         .then(healthData => {
-            if (!healthData) throw new HealthDataNotFoundError(userId);
+            if (!healthData) throw new HealthDataNotFoundError(userId, date);
         });
 }

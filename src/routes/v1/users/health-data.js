@@ -44,53 +44,83 @@ router.get('/:userId/health-data',
     validators.params({
         userId: Joi.string().required()
     }),
+    validators.query({
+        date: Joi.string().isoDate(),
+        fromDate: Joi.string().isoDate(),
+        toDate: Joi.string().isoDate(),
+        limit: Joi.number().positive(),
+        sortByDates: Joi.boolean(),
+        sortByDatesDesc: Joi.boolean()
+    }),
     (req, res) => {
         const userId = req.params.userId;
+        const options = req.query;
 
-        HealthDataService.getHealthData(userId)
+        if (options.limit) options.limit = Number(options.limit);
+        if (options.sortByDates) options.sortByDates = Boolean(options.sortByDates);
+        if (options.sortByDatesDesc) options.sortByDatesDesc = Boolean(options.sortByDatesDesc);
+
+        HealthDataService.searchHealthData(userId, options)
+            .then(healthDataList => res.json(healthDataList))
+            .catch(err => respondError(res, err));
+    });
+
+router.get('/:userId/health-data/:date',
+    validators.loggedIn, validators.canManageUser,
+    validators.params({
+        userId: Joi.string().required(),
+        date: Joi.string().isoDate().required()
+    }),
+    (req, res) => {
+        const {userId, date} = req.params;
+
+        HealthDataService.getHealthData(userId, date)
             .then(healthData => res.json(healthData))
             .catch(err => respondError(res, err));
     });
 
-router.post('/:userId/health-data',
+router.post('/:userId/health-data/:date',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        userId: Joi.string().required()
+        userId: Joi.string().required(),
+        date: Joi.string().isoDate().required()
     }),
     healthDataBodyValidator,
     (req, res) => {
-        const userId = req.params.userId;
+        const {userId, date} = req.params;
         const data = req.body;
 
-        HealthDataService.createHealthData(userId, data)
+        HealthDataService.createHealthData(userId, date, data)
             .then(healthData => res.status(201).json(healthData))
             .catch(err => respondError(res, err));
     });
 
-router.put('/:userId/health-data',
+router.put('/:userId/health-data/:date',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        userId: Joi.string().required()
+        userId: Joi.string().required(),
+        date: Joi.string().isoDate().required()
     }),
     healthDataBodyValidator,
     (req, res) => {
-        const userId = req.params.userId;
+        const {userId, date} = req.params;
         const data = req.body;
 
-        HealthDataService.updateHealthData(userId, data)
+        HealthDataService.updateHealthData(userId, date, data)
             .then(healthData => res.json(healthData))
             .catch(err => respondError(res, err));
     });
 
-router.delete('/:userId/health-data',
+router.delete('/:userId/health-data/:date',
     validators.loggedIn, validators.canManageUser,
     validators.params({
-        userId: Joi.string().required()
+        userId: Joi.string().required(),
+        date: Joi.string().isoDate().required()
     }),
     (req, res) => {
-        const userId = req.params.userId;
+        const {userId, date} = req.params;
 
-        HealthDataService.deleteHealthData(userId)
+        HealthDataService.deleteHealthData(userId, date)
             .then(() => res.status(204).end())
             .catch(err => respondError(res, err));
     });

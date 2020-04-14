@@ -48,15 +48,15 @@ export class ExerciseExistError extends Error {
 }
 
 export class HealthDataNotFoundError extends Error {
-    constructor(username) {
-        super(`${username}'s health data was not found.`);
+    constructor(username, date) {
+        super(`${username}'s health data on ${date} was not found.`);
         this.name = 'HealthDataNotFoundError';
     }
 }
 
 export class HealthDataExistError extends Error {
-    constructor(username) {
-        super(`${username}'s health data already exists.`);
+    constructor(username, date) {
+        super(`${username}'s health data on ${date} already exists.`);
         this.name = 'HealthDataExistError';
     }
 }
