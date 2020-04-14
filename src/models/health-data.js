@@ -27,6 +27,7 @@ const healthDataSchema = new Schema({
     fastingBloodSugarMedicine: Boolean
 }, {
     toJSON: {
+        id: false,
         transform: function (doc, ret) {
             delete ret._id;
             delete ret.__v;

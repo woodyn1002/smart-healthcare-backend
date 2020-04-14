@@ -2,6 +2,7 @@ import express from "express";
 import healthData from "./health-data";
 import meals from "./meals";
 import fitness from "./fitness";
+import healthSummary from "./health-summary";
 import validators from "../../../middlewares/validators";
 import Joi from "joi";
 import {UserNotFoundError} from "../../../errors";
@@ -12,6 +13,7 @@ const router = express.Router();
 router.use('/', healthData);
 router.use('/', meals);
 router.use('/', fitness);
+router.use('/', healthSummary);
 
 const respondError = (res, err) => {
     if (err instanceof UserNotFoundError) {
