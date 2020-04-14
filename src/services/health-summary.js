@@ -5,23 +5,28 @@ import * as MealService from "../services/meal";
 
 export function getMonthlySummary(userId, year, month) {
     return new Promise(async resolve => {
-        const startDate = moment()
+        const fromDate = moment()
             .year(year).month(month)
             .startOf('month');
-        const endDate = startDate.clone()
-            .endOf('month');
+        const toDate = fromDate.clone()
+            .add(1, 'month')
+            .startOf('month');
+
+        const [bmrMap, mealCaloriesMap, fitnessCaloriesMap] = await Promise.all([
+            getBmrMap(userId, fromDate, toDate),
+            getMealCaloriesMap(userId, fromDate, toDate),
+            getFitnessCaloriesMap(userId, fromDate, toDate)
+        ]);
 
         let summaryList = [];
 
-        for (let day = startDate.date(); day <= endDate.date(); day++) {
-            const date = startDate.clone().date(day);
+        let lastDate = fromDate.clone().endOf('month');
+        for (let day = fromDate.date(); day <= lastDate.date(); day++) {
+            const date = fromDate.clone().date(day);
 
-            const [bmr, mealCalories, fitnessCalories] = await Promise.all([
-                getBmr(userId, date),
-                getMealCalories(userId, date),
-                getFitnessCalories(userId, date)
-            ]);
-
+            let bmr = bmrMap.get(day);
+            let mealCalories = mealCaloriesMap.get(day);
+            let fitnessCalories = fitnessCaloriesMap.get(day);
             let summary = {
                 date, day,
                 bmr, mealCalories, fitnessCalories,
@@ -33,27 +38,63 @@ export function getMonthlySummary(userId, year, month) {
     });
 }
 
-function getBmr(userId, date) {
-    let toDate = moment(date)
-        .add(1, 'day')
-        .startOf('day');
-    return HealthDataService.searchHealthData(userId, {limit: 1, toDate, sortByDatesDesc: true})
-        .then(healthDataList => {
-            if (healthDataList.length === 0) {
-                return 0;
+function getBmrMap(userId, fromDate, toDate) {
+    const lastDate = fromDate.clone().endOf('month');
+
+    return HealthDataService.searchHealthData(userId, {fromDate, toDate, sortByDates: true})
+        .then(async healthDataQueue => {
+            let bmrMap = new Map();
+
+            const firstHealthData = await HealthDataService.searchHealthData(userId, {
+                limit: 1, toDate: fromDate, sortByDatesDesc: true
+            });
+
+            let latestBmr = (firstHealthData.length === 0) ? 0 : firstHealthData.bmr;
+            for (let day = fromDate.date(); day <= lastDate.date(); day++) {
+                while (healthDataQueue.length > 0 && moment(healthDataQueue[0].date).date() <= day) {
+                    latestBmr = healthDataQueue[0].bmr || 0;
+                    healthDataQueue.shift();
+                }
+                bmrMap.set(day, latestBmr);
             }
-            return healthDataList[0].bmr;
+            return bmrMap;
         });
 }
 
-const sum = (a, b) => a + b;
+function getMealCaloriesMap(userId, fromDate, toDate) {
+    const lastDate = fromDate.clone().endOf('month');
 
-function getMealCalories(userId, date) {
-    return MealService.searchMeals(userId, {date})
-        .then(meals => meals.map(it => it.totalCalories).reduce(sum, 0));
+    return MealService.searchMeals(userId, {fromDate, toDate, sortByDates: true})
+        .then(mealQueue => {
+            let caloriesMap = new Map();
+
+            for (let day = fromDate.date(); day <= lastDate.date(); day++) {
+                let calories = 0;
+                while (mealQueue.length > 0 && moment(mealQueue[0].date).date() === day) {
+                    calories += mealQueue[0].totalCalories;
+                    mealQueue.shift();
+                }
+                caloriesMap.set(day, calories);
+            }
+            return caloriesMap;
+        });
 }
 
-function getFitnessCalories(userId, date) {
-    return FitnessService.searchFitness(userId, {date})
-        .then(fitnessList => fitnessList.map(it => it.burntCalories).reduce(sum, 0));
+function getFitnessCaloriesMap(userId, fromDate, toDate) {
+    const lastDate = fromDate.clone().endOf('month');
+
+    return FitnessService.searchFitness(userId, {fromDate, toDate, sortByDates: true})
+        .then(fitnessQueue => {
+            let caloriesMap = new Map();
+
+            for (let day = fromDate.date(); day <= lastDate.date(); day++) {
+                let calories = 0;
+                while (fitnessQueue.length > 0 && moment(fitnessQueue[0].date).date() === day) {
+                    calories += fitnessQueue[0].burntCalories;
+                    fitnessQueue.shift();
+                }
+                caloriesMap.set(day, calories);
+            }
+            return caloriesMap;
+        });
 }
