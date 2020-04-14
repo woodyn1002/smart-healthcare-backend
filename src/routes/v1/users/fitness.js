@@ -24,14 +24,11 @@ router.get('/:userId/fitness',
     }),
     validators.query({
         date: Joi.string().isoDate(),
-        options: {
-            date: Joi.string(),
-            fromDate: Joi.string().isoDate(),
-            toDate: Joi.string().isoDate(),
-            limit: Joi.number().positive(),
-            sortByDates: Joi.boolean(),
-            sortByDatesDesc: Joi.boolean()
-        }
+        fromDate: Joi.string().isoDate(),
+        toDate: Joi.string().isoDate(),
+        limit: Joi.number().positive(),
+        sortByDates: Joi.boolean(),
+        sortByDatesDesc: Joi.boolean()
     }),
     (req, res) => {
         const userId = req.params.userId;
