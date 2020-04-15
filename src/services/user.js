@@ -2,6 +2,9 @@ import * as MUUID from "uuid-mongodb";
 import crypto from "crypto";
 import User from "../models/user";
 import {UsernameExistError, UserNotFoundError} from "../errors";
+import * as HealthDataService from "./health-data";
+import * as MealService from "./meal";
+import * as FitnessService from "./fitness";
 
 export function encryptPassword(password) {
     return crypto.createHmac('sha1', process.env.APP_PWD_SECRET)
@@ -65,6 +68,14 @@ export function deleteUser(userId) {
     return User.findOneAndDelete({_id: MUUID.from(userId)})
         .then(user => {
             if (!user) throw new UserNotFoundError(userId);
+
+            let promises = [];
+
+            promises.push(HealthDataService.deleteAllOf(userId));
+            promises.push(MealService.deleteAllOf(userId));
+            promises.push(FitnessService.deleteAllOf(userId));
+
+            return Promise.all(promises);
         });
 }
 

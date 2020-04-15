@@ -125,6 +125,10 @@ export function deleteMeal(userId, date) {
         });
 }
 
+export function deleteAllOf(userId) {
+    return Meal.remove({userId});
+}
+
 export function exists(userId, date) {
     return Meal.exists({userId, date});
 }

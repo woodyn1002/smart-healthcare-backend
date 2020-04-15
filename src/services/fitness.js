@@ -113,6 +113,10 @@ export function deleteFitness(userId, date) {
         });
 }
 
+export function deleteAllOf(userId) {
+    return Fitness.remove({userId});
+}
+
 export function exists(userId, date) {
     return Fitness.exists({userId, date});
 }

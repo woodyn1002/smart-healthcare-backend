@@ -100,6 +100,10 @@ export function deleteHealthData(userId, date) {
         });
 }
 
+export function deleteAllOf(userId) {
+    return HealthData.remove({userId});
+}
+
 export function exists(userId, date) {
     return HealthData.exists({userId, date});
 }
