@@ -80,4 +80,20 @@ router.post('/facebook',
             .catch(err => respondError(res, err));
     });
 
+router.post('/google',
+    validators.body({
+        code: Joi.string().required()
+    }),
+    (req, res) => {
+        const code = req.body.code;
+
+        AuthService.loginWithGoogle(code)
+            .then(result => {
+                const response = result.user.toJSON();
+                response.token = result.token;
+                res.json(response);
+            })
+            .catch(err => respondError(res, err));
+    });
+
 export default router;

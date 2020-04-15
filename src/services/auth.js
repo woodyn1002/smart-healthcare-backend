@@ -121,3 +121,45 @@ function loginWithFacebookToken(token) {
             return publishToken(user);
         });
 }
+
+export function loginWithGoogle(code) {
+    let url = 'https://oauth2.googleapis.com/token?grant_type=authorization_code' +
+              '&client_id=' + process.env.APP_GOOGLE_API_CLIENT_ID +
+              '&client_secret=' + process.env.APP_GOOGLE_API_CLIENT_SECRET +
+              '&redirect_uri=' + process.env.APP_GOOGLE_API_REDIRECT_URI +
+              '&code=' + code;
+    return axios.post(url)
+        .then(response => {
+            let token = response.data.access_token;
+            return loginWithGoogleToken(token);
+        });
+}
+
+function loginWithGoogleToken(token) {
+    let config = {
+        headers: {Authorization: 'Bearer ' + token}
+    };
+    return axios.get(`https://www.googleapis.com/oauth2/v2/userinfo`, config)
+        .then(async response => {
+            const profile = response.data;
+
+            let username = profile.email;
+            let email = profile.email;
+            let fullName = profile.name;
+
+            let user;
+            try {
+                user = await UserService.getUserByName(username, 'google');
+            } catch (e) {
+                if (e instanceof UserNotFoundError) {
+                    user = await UserService.createUserWithSns(username, 'google', email, fullName, false);
+                } else {
+                    throw e;
+                }
+            }
+            return user;
+        })
+        .then(user => {
+            return publishToken(user);
+        });
+}
