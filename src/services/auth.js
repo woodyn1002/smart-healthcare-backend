@@ -82,3 +82,42 @@ function loginWithNaverToken(token) {
             return publishToken(user);
         });
 }
+
+export function loginWithFacebook(code) {
+    let url = 'https://graph.facebook.com/v6.0/oauth/access_token?' +
+              'client_id=' + process.env.APP_FACEBOOK_API_APP_ID +
+              '&redirect_uri=' + process.env.APP_FACEBOOK_API_REDIRECT_URI +
+              '&client_secret=' + process.env.APP_FACEBOOK_API_APP_SECRET +
+              '&code=' + code;
+    return axios.get(url)
+        .then(response => {
+            let token = response.data.access_token;
+            return loginWithFacebookToken(token);
+        });
+}
+
+function loginWithFacebookToken(token) {
+    return axios.get(`https://graph.facebook.com/me?fields=email,name&access_token=${token}`)
+        .then(async response => {
+            const profile = response.data;
+
+            let username = profile.email;
+            let email = profile.email;
+            let fullName = profile.name;
+
+            let user;
+            try {
+                user = await UserService.getUserByName(username, 'facebook');
+            } catch (e) {
+                if (e instanceof UserNotFoundError) {
+                    user = await UserService.createUserWithSns(username, 'facebook', email, fullName, false);
+                } else {
+                    throw e;
+                }
+            }
+            return user;
+        })
+        .then(user => {
+            return publishToken(user);
+        });
+}

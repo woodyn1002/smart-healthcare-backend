@@ -64,4 +64,20 @@ router.post('/naver',
             .catch(err => respondError(res, err));
     });
 
+router.post('/facebook',
+    validators.body({
+        code: Joi.string().required()
+    }),
+    (req, res) => {
+        const code = req.body.code;
+
+        AuthService.loginWithFacebook(code)
+            .then(result => {
+                const response = result.user.toJSON();
+                response.token = result.token;
+                res.json(response);
+            })
+            .catch(err => respondError(res, err));
+    });
+
 export default router;
