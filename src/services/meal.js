@@ -104,6 +104,11 @@ export function updateMeal(userId, date, data) {
                 }
             }
 
+            if (data.date) {
+                let alreadyExists = await exists(userId, data.date);
+                if (alreadyExists) throw new MealExistError(userId, data.date);
+                meal.date = data.date;
+            }
             if (data.location) meal.location = data.location;
             if (data.satisfactionScore) meal.satisfactionScore = data.satisfactionScore;
             if (data.dishes) meal.dishes = data.dishes;
@@ -118,4 +123,8 @@ export function deleteMeal(userId, date) {
         .then(meal => {
             if (!meal) throw new MealNotFoundError(userId, date);
         });
+}
+
+export function exists(userId, date) {
+    return Meal.exists({userId, date});
 }

@@ -87,6 +87,7 @@ router.put('/:userId/fitness/:date',
         date: Joi.string().isoDate().required()
     }),
     validators.body({
+        date: Joi.string().isoDate(),
         exerciseId: Joi.string().required(),
         burntCalories: Joi.number().positive().required(),
         count: Joi.number().positive().required(),

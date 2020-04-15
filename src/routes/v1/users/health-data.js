@@ -7,6 +7,7 @@ import Joi from "joi";
 const router = express.Router();
 
 const healthDataBodyValidator = validators.body({
+    date: Joi.string().isoDate(),
     sex: Joi.string().valid('male', 'female'),
     height: Joi.number().positive(),
     weight: Joi.number().positive(),

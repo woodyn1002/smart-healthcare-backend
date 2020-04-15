@@ -89,6 +89,7 @@ router.put('/:userId/meals/:date',
         date: Joi.string().isoDate().required()
     }),
     validators.body({
+        date: Joi.string().isoDate(),
         location: Joi.string(),
         satisfactionScore: Joi.number().min(0).max(4),
         dishes: Joi.array().items(dishSchema).required()

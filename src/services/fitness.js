@@ -90,6 +90,11 @@ export function updateFitness(userId, date, data) {
             let exercise = await ExerciseService.getExercise(data.exerciseId);
             if (!exercise) throw new ExerciseNotFoundError(data.exerciseId);
 
+            if (data.date) {
+                let alreadyExists = await exists(userId, data.date);
+                if (alreadyExists) throw new FitnessExistError(userId, data.date);
+                fitness.date = data.date;
+            }
             if (data.exerciseId) fitness.exerciseId = data.exerciseId;
             if (data.burntCalories) fitness.burntCalories = data.burntCalories;
             if (data.count) fitness.count = data.count;
@@ -106,4 +111,8 @@ export function deleteFitness(userId, date) {
         .then(fitness => {
             if (!fitness) throw new FitnessNotFoundError(userId, date);
         });
+}
+
+export function exists(userId, date) {
+    return Fitness.exists({userId, date});
 }

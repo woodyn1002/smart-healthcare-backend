@@ -61,9 +61,14 @@ export function createHealthData(userId, date, data) {
 
 export function updateHealthData(userId, date, data) {
     return HealthData.findOne({userId, date})
-        .then(healthData => {
+        .then(async healthData => {
             if (!healthData) throw new HealthDataNotFoundError(userId, date);
 
+            if (data.date) {
+                let alreadyExists = await exists(userId, data.date);
+                if (alreadyExists) throw new HealthDataExistError(userId, data.date);
+                healthData.date = data.date;
+            }
             if (data.sex) healthData.sex = data.sex;
             if (data.height) healthData.height = data.height;
             if (data.weight) healthData.weight = data.weight;
@@ -93,4 +98,8 @@ export function deleteHealthData(userId, date) {
         .then(healthData => {
             if (!healthData) throw new HealthDataNotFoundError(userId, date);
         });
+}
+
+export function exists(userId, date) {
+    return HealthData.exists({userId, date});
 }
