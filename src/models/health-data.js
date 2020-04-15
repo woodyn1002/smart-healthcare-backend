@@ -4,7 +4,7 @@ import moment from "moment";
 const Schema = mongoose.Schema;
 
 const healthDataSchema = new Schema({
-    userId: {type: String, index: true, unique: true, required: true},
+    userId: {type: String, index: true, required: true},
     date: {type: Date, index: true, required: true},
     sex: {type: String, enum: ['male', 'female']},
     height: Number,
