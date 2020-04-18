@@ -57,6 +57,19 @@ router.get('/:userId/fitness/:date',
             .catch(err => respondError(res, err));
     });
 
+const exerciseValidator = (req, res, next) => {
+    let data = req.body;
+    if (!data.exerciseId && !data.exercise)
+        return res.status(403).json({
+            error: {name: 'ValidationError', message: 'Field exerciseId or exercise must be provided'}
+        });
+    if (data.exercise && !data.exercise.name)
+        return res.status(403).json({
+            error: {name: 'ValidationError', message: 'Field exercise.name must be provided'}
+        });
+    next();
+};
+
 router.post('/:userId/fitness/:date',
     validators.loggedIn, validators.canManageUser,
     validators.params({
@@ -64,12 +77,17 @@ router.post('/:userId/fitness/:date',
         date: Joi.string().isoDate().required()
     }),
     validators.body({
-        exerciseId: Joi.string().required(),
+        exerciseId: Joi.string(),
+        exercise: {
+            name: Joi.string(),
+            met: Joi.number().positive()
+        },
         burntCalories: Joi.number().positive().required(),
         count: Joi.number().positive().required(),
         elapsedTime: Joi.number().positive().required(),
         intensity: Joi.number().min(0).max(4)
     }),
+    exerciseValidator,
     validators.loggedIn, validators.canManageUser,
     (req, res) => {
         const {userId, date} = req.params;
@@ -88,12 +106,17 @@ router.put('/:userId/fitness/:date',
     }),
     validators.body({
         date: Joi.string().isoDate(),
-        exerciseId: Joi.string().required(),
+        exerciseId: Joi.string(),
+        exercise: {
+            name: Joi.string(),
+            met: Joi.number().positive()
+        },
         burntCalories: Joi.number().positive().required(),
         count: Joi.number().positive().required(),
         elapsedTime: Joi.number().positive().required(),
         intensity: Joi.number().min(0).max(4)
     }),
+    exerciseValidator,
     (req, res) => {
         const {userId, date} = req.params;
         const data = req.body;

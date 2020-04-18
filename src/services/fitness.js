@@ -6,7 +6,9 @@ import {ExerciseNotFoundError, FitnessExistError, FitnessNotFoundError} from "..
 function toResponseJson(doc) {
     const populated = (doc, exercises) => {
         let fitness = doc.toJSON();
-        fitness.exercise = exercises.find(exercise => exercise.id === fitness.exerciseId);
+        if (fitness.exerciseId) {
+            fitness.exercise = exercises.find(exercise => exercise.id === fitness.exerciseId);
+        }
         return fitness;
     };
 
@@ -61,23 +63,38 @@ export function getFitness(userId, date) {
         .then(fitnessList => toResponseJson(fitnessList));
 }
 
+async function validateExercise(data) {
+    if (data.exerciseId) {
+        let exercise = await ExerciseService.getExercise(data.exerciseId);
+        if (!exercise) throw new ExerciseNotFoundError(data.exerciseId);
+    } else if (data.exercise) {
+        if (!data.exercise.name) {
+            throw new Error('Field exercise.name must be provided');
+        }
+    } else {
+        throw new Error('Field exerciseId or exercise must be provided');
+    }
+}
+
 export function createFitness(userId, date, data) {
     return Fitness.findOne({userId, date})
         .then(async fitness => {
             if (fitness) throw new FitnessExistError(userId, date);
+            await validateExercise(data);
 
-            let exercise = await ExerciseService.getExercise(data.exerciseId);
-            if (!exercise) throw new ExerciseNotFoundError(data.exerciseId);
-
-            return Fitness.create({
+            const document = {
                 userId,
                 date,
-                exerciseId: data.exerciseId,
                 burntCalories: data.burntCalories,
                 count: data.count,
                 elapsedTime: data.elapsedTime,
                 intensity: data.intensity
-            });
+            };
+            if (data.exerciseId)
+                document.exerciseId = data.exerciseId;
+            else
+                document.exercise = data.exercise;
+            return Fitness.create(document);
         })
         .then(fitnessList => toResponseJson(fitnessList));
 }
@@ -86,9 +103,7 @@ export function updateFitness(userId, date, data) {
     return Fitness.findOne({userId, date})
         .then(async fitness => {
             if (!fitness) throw new FitnessNotFoundError(userId, date);
-
-            let exercise = await ExerciseService.getExercise(data.exerciseId);
-            if (!exercise) throw new ExerciseNotFoundError(data.exerciseId);
+            await validateExercise(data);
 
             if (data.date) {
                 let alreadyExists = await exists(userId, data.date);
@@ -96,6 +111,7 @@ export function updateFitness(userId, date, data) {
                 fitness.date = data.date;
             }
             if (data.exerciseId) fitness.exerciseId = data.exerciseId;
+            else if (data.exercise) fitness.exercise = data.exercise;
             if (data.burntCalories) fitness.burntCalories = data.burntCalories;
             if (data.count) fitness.count = data.count;
             if (data.elapsedTime) fitness.elapsedTime = data.elapsedTime;
