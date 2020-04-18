@@ -9,10 +9,14 @@ function toResponseJson(doc) {
         meal.totalCalories = 0;
 
         for (let dish of meal.dishes) {
-            let food = foods.find(food => food.id === dish.foodId);
-            if (food) {
-                dish.food = food;
-                meal.totalCalories += food.calories * dish.amount;
+            if (dish.foodId) {
+                let food = foods.find(food => food.id === dish.foodId);
+                if (food) {
+                    dish.food = food;
+                    meal.totalCalories += food.calories * dish.amount;
+                }
+            } else {
+                meal.totalCalories += dish.food.calories * dish.amount;
             }
         }
         return meal;
@@ -69,16 +73,27 @@ export function getMeal(userId, date) {
         .then(meal => toResponseJson(meal));
 }
 
+async function validateDishes(dishes) {
+    let foods = await FoodService.getFoods();
+    for (let dish of dishes) {
+        if (dish.foodId) {
+            let food = foods.find(food => food.id === dish.foodId);
+            if (!food) throw new FoodNotFoundError(dish.foodId);
+        } else if (dish.food) {
+            if (!dish.food.name || !dish.food.calories) {
+                throw new Error('Fields food.name and food.calories must be provided');
+            }
+        } else {
+            throw new Error('Field foodId or food must be provided');
+        }
+    }
+}
+
 export function createMeal(userId, date, data) {
     return Meal.findOne({userId, date})
         .then(async meal => {
             if (meal) throw new MealExistError(userId, date);
-
-            let foods = await FoodService.getFoods();
-            for (let dish of data.dishes) {
-                let food = foods.find(food => food.id === dish.foodId);
-                if (!food) throw new FoodNotFoundError(dish.foodId);
-            }
+            await validateDishes(data.dishes);
 
             return Meal.create({
                 userId,
@@ -95,14 +110,7 @@ export function updateMeal(userId, date, data) {
     return Meal.findOne({userId, date})
         .then(async meal => {
             if (!meal) throw new MealNotFoundError(userId, date);
-
-            if (data.dishes) {
-                let foods = await FoodService.getFoods();
-                for (let dish of data.dishes) {
-                    let food = foods.find(food => food.id === dish.foodId);
-                    if (!food) throw new FoodNotFoundError(dish.foodId);
-                }
-            }
+            if (data.dishes) await validateDishes(data.dishes);
 
             if (data.date) {
                 let alreadyExists = await exists(userId, data.date);

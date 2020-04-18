@@ -3,7 +3,11 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const dishSchema = new Schema({
-    foodId: {type: String, required: true},
+    foodId: String,
+    food: {
+        name: String,
+        calories: Number
+    },
     amount: {type: Number, default: 1}
 }, {
     toJSON: {

@@ -7,7 +7,11 @@ import {FoodNotFoundError, MealExistError, MealNotFoundError} from "../../../err
 const router = express.Router();
 
 const dishSchema = Joi.object().keys({
-    foodId: Joi.string().required(),
+    foodId: Joi.string(),
+    food: {
+        name: Joi.string(),
+        calories: Joi.number().positive()
+    },
     amount: Joi.number().positive()
 });
 
@@ -62,6 +66,21 @@ router.get('/:userId/meals/:date',
             .catch(err => respondError(res, err));
     });
 
+const dishValidator = (req, res, next) => {
+    let dishes = req.body.dishes;
+    for (let dish of dishes) {
+        if (!dish.foodId && !dish.food)
+            return res.status(403).json({
+                error: {name: 'ValidationError', message: 'Field foodId or food must be provided'}
+            });
+        if (dish.food && (!dish.food.name || !dish.food.calories))
+            return res.status(403).json({
+                error: {name: 'ValidationError', message: 'Fields food.name and food.calories must be provided'}
+            });
+    }
+    next();
+};
+
 router.post('/:userId/meals/:date',
     validators.loggedIn, validators.canManageUser,
     validators.params({
@@ -73,6 +92,7 @@ router.post('/:userId/meals/:date',
         satisfactionScore: Joi.number().min(0).max(4),
         dishes: Joi.array().items(dishSchema).required()
     }),
+    dishValidator,
     (req, res) => {
         const {userId, date} = req.params;
         const data = req.body;
@@ -94,6 +114,7 @@ router.put('/:userId/meals/:date',
         satisfactionScore: Joi.number().min(0).max(4),
         dishes: Joi.array().items(dishSchema).required()
     }),
+    dishValidator,
     (req, res) => {
         const {userId, date} = req.params;
         const data = req.body;
