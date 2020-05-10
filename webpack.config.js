@@ -25,6 +25,11 @@ module.exports = {
                 use: {
                     loader: 'babel-loader'
                 }
+            },
+            {
+                test: /\.(json|bin)$/,
+                loader: 'file-loader',
+                type: 'javascript/auto'
             }
         ]
     },

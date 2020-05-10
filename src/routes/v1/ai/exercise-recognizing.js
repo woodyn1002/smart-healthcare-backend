@@ -1,23 +1,23 @@
 import express from "express";
+const modelJson = require("../../../tf_models/exercise/model.json");
+const metadataJson = require("../../../tf_models/exercise/metadata.json");
+const weightsBin = require("../../../tf_models/exercise/weights.bin");
 
 const router = express.Router();
 
 router.get('/model',
     (req, res) => {
-        let file = process.env.APP_EXERCISE_MODEL_URL;
-        res.download(file);
+        res.download(__dirname + modelJson.default);
     });
 
 router.get('/metadata',
     (req, res) => {
-        let file = process.env.APP_EXERCISE_METADATA_URL;
-        res.download(file);
+        res.download(__dirname + metadataJson.default);
     });
 
 router.get('/weights.bin',
     (req, res) => {
-        let file = process.env.APP_EXERCISE_WEIGHTS_URL;
-        res.download(file);
+        res.download(__dirname + weightsBin.default);
     });
 
 export default router;
