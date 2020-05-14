@@ -3,7 +3,7 @@ import * as tfnode from '@tensorflow/tfjs-node';
 import {CLASSES} from '../tf_models/food/classes';
 import * as FoodService from './food';
 
-export function recognize(imageFile) {
+export function recognize(imageBuffer) {
     const path = tfnode.io.fileSystem("./dist/tf_models/food/model.json");
     return tf.loadGraphModel(path)
         .then(async model => {
@@ -14,7 +14,7 @@ export function recognize(imageFile) {
             zeroTensor.dispose();
 
             const batched = tf.tidy(() => {
-                const tfimage = tfnode.node.decodeImage(imageFile.buffer);
+                const tfimage = tfnode.node.decodeImage(imageBuffer);
                 return tfimage.expandDims(0);
             });
 
