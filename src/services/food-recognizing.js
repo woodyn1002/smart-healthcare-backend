@@ -24,6 +24,9 @@ export function recognize(imageFile) {
             const classId = result[2].dataSync()[0];
             const food = await FoodService.getFood(CLASSES[classId]);
 
+            batched.dispose();
+            tf.dispose(result);
+
             console.debug(`Food detected: id=${classId}, probability=${probability}, food=${JSON.stringify(food)}`);
 
             return [food];
