@@ -4,6 +4,7 @@ const nodeExternals = require('webpack-node-externals');
 const DotenvFlow = require('dotenv-flow-webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const MakeDirWebpackPlugin = require('make-dir-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 require("babel-polyfill");
 
 module.exports = {
@@ -37,7 +38,10 @@ module.exports = {
         new CopyPlugin([
             {from: 'src/tf_models', to: 'tf_models'}
         ]),
-        new MakeDirWebpackPlugin({dirs: [{path: './dist/food-uploads'}]})
+        new MakeDirWebpackPlugin({dirs: [{path: './dist/food-uploads'}]}),
+        new CleanWebpackPlugin({
+            cleanAfterEveryBuildPatterns: ['dist']
+        })
     ],
     devtool: 'source-map',
     mode: 'development'
