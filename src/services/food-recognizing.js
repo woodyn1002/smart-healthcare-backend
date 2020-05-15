@@ -26,6 +26,8 @@ export function recognize(imageBuffer) {
 
             batched.dispose();
             tf.dispose(result);
+            tf.disposeVariables();
+            model.dispose();
 
             console.debug(`Food detected: id=${classId}, probability=${probability}, food=${JSON.stringify(food)}`);
 
