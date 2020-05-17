@@ -20,17 +20,27 @@ export function recognize(imageBuffer) {
 
             const result = await model.executeAsync(batched);
 
-            const probability = result[1].dataSync()[0];
-            const classId = result[2].dataSync()[0];
-            const food = await FoodService.getFood(CLASSES[classId]);
+            const probabilities = result[1].dataSync();
+            const classIds = result[2].dataSync();
+
+            const foods = [];
+            let i = 0;
+            do {
+                const classId = classIds[i];
+                const probability = probabilities[i];
+                
+                const food = await FoodService.getFood(CLASSES[classIds[i]]);
+                console.debug(`Food detected: id=${classId}, probability=${probability}, food=${JSON.stringify(food)}`);
+                
+                foods.push({food, probability});
+                i++;
+            } while (probabilities[i] > 0.2);
 
             batched.dispose();
             tf.dispose(result);
             tf.disposeVariables();
             model.dispose();
 
-            console.debug(`Food detected: id=${classId}, probability=${probability}, food=${JSON.stringify(food)}`);
-
-            return [food];
+            return foods;
         });
 }
