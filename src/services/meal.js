@@ -118,7 +118,7 @@ export function updateMeal(userId, date, data) {
                 meal.date = data.date;
             }
             if (data.location) meal.location = data.location;
-            if (data.satisfactionScore) meal.satisfactionScore = data.satisfactionScore;
+            if (data.satisfactionScore !== undefined) meal.satisfactionScore = data.satisfactionScore;
             if (data.dishes) meal.dishes = data.dishes;
 
             return meal.save();

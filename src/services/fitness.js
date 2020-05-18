@@ -115,7 +115,7 @@ export function updateFitness(userId, date, data) {
             if (data.burntCalories) fitness.burntCalories = data.burntCalories;
             if (data.count) fitness.count = data.count;
             if (data.elapsedTime) fitness.elapsedTime = data.elapsedTime;
-            if (data.intensity) fitness.intensity = data.intensity;
+            if (data.intensity !== undefined) fitness.intensity = data.intensity;
 
             return fitness.save();
         })
