@@ -49,7 +49,7 @@ function getBmrMap(userId, fromDate, toDate) {
                 limit: 1, toDate: fromDate, sortByDatesDesc: true
             });
 
-            let latestBmr = (firstHealthData.length === 0) ? 0 : firstHealthData.bmr;
+            let latestBmr = (firstHealthData.length === 0) ? 0 : firstHealthData[0].bmr;
             for (let day = fromDate.date(); day <= lastDate.date(); day++) {
                 while (healthDataQueue.length > 0 && moment(healthDataQueue[0].date).date() <= day) {
                     latestBmr = healthDataQueue[0].bmr || 0;
